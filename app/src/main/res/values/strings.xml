@@ -1,3 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
 <resources>
-    <string name="app_name">MovieApp</string>
-</resources>
+    <string name="app_name">Movie App</string>
+<string name="version">Version %1$s</string>
+<string name="onboarding1">Tell us about your\nfavorite movie genres</string>
+<string name="genresSelect">Select the genres you\nlike to watch</string>
+<string name="Next">Next</string>
+<string name="Skip">Skip</string>
+<string name="signInTitle">Sign In</string>
+<string name="sinInButton">Sign in</string>
+<string name="emailPlace">E-mail</string>
+<string name="passPlace">Password</string>
+<string name="forgotPass">Forgot password?</string>
+<string name="or">or</string>
+<string name="haveAccount">Don’t you have an account? <annotation key="action" value="sign_up">Sign Up</annotation></string>
+
+<string name="signupTitle">Sign Up</string>
+<string name="signupBtn">Sign up</string>
+<string name="signupTerms">By clicking the “sign up” button, you accept the terms of the <annotation key="action" value="privacy_policy">Privacy Policy</annotation></string>
+<string name="accountAlready">Already have an account? <annotation key="action" value="sign_in">Sign In</annotation></string>
+
+<string name="signupSuccess">Sign up successfully!</string>
+<string name="MoreInfo">Tell us more about you</string>
+<string name="name">Your name</string>
+<string name="phoneNumber">Your phone number</string>
+<string name="city_pincode">Current City/pincode</string>
+<string name="continueBtn">Continue</string>
+<string name="homeGreeting">Hey, %1$s</string>
+<string name="Trending">TRENDING</string>
+<string name="recommendedMovies">Recommended Movies</string>
+<string name="see_all">See all</string>
+<string name="Book">Book</string>
+<string name="watch_trailer">Watch Trailer</string>
+<string name="navMovies">Movies</string>
+
+<string name="searchMovies">Search any movies name here</string>
+<string name="searchRecent">Recent search</string>
+<string name="searchRes">Search Results</string>
+
+<string name="rating">Censor Rating</string>
+<string name="duration">Duration</string>
+<string name="release_date">Release date</string>
+<string name="languages">Available in languages</string>
+<string name="plot">Story Plot</string>
+<string name="cast">Cast</string>
+<string name="book_tickets">Book Tickets</string>
+<string name="back">Go back</string>
+<string name="search">Search movies</string>
+<string name="open_profile">Open profile</string>
+<string name="filter">Filter movies</string>
+<string name="moreOptions">More options</string>
+<string name="showPass">Show password</string>
+<string name="hidePass">Hide password</string>
+<string name="facebook">Continue with Facebook</string>
+<string name="google">Continue with Google</string>
+<string name="apple">Continue with Apple</string>
+<string name="movie_trailer">Watch trailer for %1$s</string>
+    </resources>
