@@ -54,7 +54,9 @@ fun SignInScreen(
 
     SignInContent(
         state = state,
-        onIntent = viewModel::onIntent,
+        onIntent = { intent ->
+            viewModel.onIntent(intent)
+        },
         modifier = modifier,
     )
 }

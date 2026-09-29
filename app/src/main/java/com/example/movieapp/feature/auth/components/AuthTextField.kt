@@ -72,7 +72,7 @@ fun AuthTextField(
         keyboardActions = keyboardActions,
 
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = RedPrime,
+            focusedBorderColor = MovieWhite,
             unfocusedBorderColor = InputBorder,
             errorBorderColor = RedPrime,
             focusedTextColor = MovieWhite,
