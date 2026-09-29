@@ -132,6 +132,7 @@ object TextStyles {
         letterSpacing = 0.sp,
     )
 }
+
 val Typography = Typography(
     headlineSmall = TextStyles.Auth,
     titleLarge = TextStyles.Onboarding,

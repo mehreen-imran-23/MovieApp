@@ -2,7 +2,6 @@ package com.example.movieapp
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.enableEdgeToEdge
 
 class MainActivity : ComponentActivity() {
 

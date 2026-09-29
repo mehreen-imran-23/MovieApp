@@ -1,4 +1,5 @@
 package com.example.movieapp.ui.theme
+
 import androidx.compose.ui.graphics.Color
 
 val RedPrime = Color(0xFFEB2F3D)
@@ -20,5 +21,5 @@ val BookGradientS = Color(0xFF323232)
 val BookGradientM = Color(0xFF767676)
 val BookGradientE = Color(0xFF363535)
 
-val NavGradientS= Color(0xFF1F1F1F)
+val NavGradientS = Color(0xFF1F1F1F)
 val NavGradientE = Color(0xFF333333)

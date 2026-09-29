@@ -1,13 +1,30 @@
+import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
+val movieLocalProperties = Properties().apply {
+    val propertiesFile = rootProject.file("local.properties")
+
+    if (propertiesFile.exists()) {
+        propertiesFile.inputStream().use { load(it) }
+    }
+}
+
+val tmdbReadAccessToken = movieLocalProperties
+    .getProperty("TMDB_READ_ACCESS_TOKEN", "")
+    .trim()
+
+val escapedTmdbToken = tmdbReadAccessToken
+    .replace("\\", "\\\\")
+    .replace("\"", "\\\"")
 
 android {
     namespace = "com.example.movieapp"
     compileSdk {
         version = release(37)
     }
+
 
     defaultConfig {
         applicationId = "com.example.movieapp"
@@ -17,8 +34,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
 
+        buildConfigField(
+            "String",
+            "TMDB_READ_ACCESS_TOKEN",
+            "\"$escapedTmdbToken\"",
+        )
+    }
     buildTypes {
         release {
             optimization {
@@ -30,14 +52,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.camera.core)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
@@ -53,11 +78,14 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
     implementation("androidx.navigation:navigation-compose:2.10.2")
-//    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
-//    implementation("androidx.compose.ui:ui-text-google-fonts")
-//    implementation("com.squareup.retrofit2:retrofit:3.0.0")
-//    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
     implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
+    implementation("io.insert-koin:koin-android:4.1.1")
+    implementation("io.insert-koin:koin-androidx-compose:4.1.1")
+    implementation("androidx.compose.material3:material3:...")
+    implementation("androidx.compose.material:material-icons-extended")
 
 
 }

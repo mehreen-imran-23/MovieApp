@@ -9,12 +9,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.movieapp.ui.theme.RedPrime
 import com.example.movieapp.ui.theme.MovieSurface
 import com.example.movieapp.ui.theme.RedPrime
 
 @Composable
-fun OnboardingPageIndicator(
+fun PageIndicator(
     currentPage: Int,
     modifier: Modifier = Modifier,
     pageCount: Int = 2,

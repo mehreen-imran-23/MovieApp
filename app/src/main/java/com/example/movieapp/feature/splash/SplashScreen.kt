@@ -19,9 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.movieapp.R
 import com.example.movieapp.ui.theme.MovieAppTheme
+import com.example.movieapp.ui.theme.MovieWhite
 import com.example.movieapp.ui.theme.RedPrime
 import com.example.movieapp.ui.theme.TextStyles
-import com.example.movieapp.ui.theme.MovieWhite
 
 @Composable
 fun SplashScreen(

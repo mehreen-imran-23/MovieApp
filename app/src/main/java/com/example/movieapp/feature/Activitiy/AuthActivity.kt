@@ -1,18 +1,14 @@
-package com.example.movieapp.feature.onboarding
+package com.example.movieapp.feature.auth
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.example.movieapp.feature.auth.AuthActivity
-import com.example.movieapp.navigation.OnboardingNavHost
+import com.example.movieapp.feature.auth.signin.SignInScreen
 import com.example.movieapp.ui.theme.MovieAppTheme
 
-class OnboardingActivity : ComponentActivity() {
-
-    private var opening = false
+class AuthActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,24 +21,10 @@ class OnboardingActivity : ComponentActivity() {
             ),
         )
 
-
         setContent {
             MovieAppTheme {
-                OnboardingNavHost(
-                    versionName = "1.0.1",
-                    onOpenSignIn = ::openSignIn,
-                )
+                SignInScreen()
             }
         }
-    }
-
-    private fun openSignIn() {
-        if (opening) return
-        opening = true
-
-        startActivity(
-            Intent(this, AuthActivity::class.java)
-        )
-        finish()
     }
 }
