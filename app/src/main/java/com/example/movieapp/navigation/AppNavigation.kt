@@ -5,12 +5,16 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.movieapp.feature.auth.AuthEnum
+import com.example.movieapp.feature.auth.AuthEvent
+import com.example.movieapp.feature.auth.AuthViewModel
+import com.example.movieapp.feature.auth.signin.SignInScreen
+import com.example.movieapp.feature.auth.signup.SignUpScreen
 import com.example.movieapp.feature.onboarding.Onboarding1Event
 import com.example.movieapp.feature.onboarding.OnboardingScreen
 import com.example.movieapp.feature.onboarding.OnboardingViewModel
@@ -18,6 +22,7 @@ import com.example.movieapp.feature.splash.SplashEvent
 import com.example.movieapp.feature.splash.SplashScreen
 import com.example.movieapp.feature.splash.SplashViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun OnboardingNavHost(
@@ -34,24 +39,29 @@ fun OnboardingNavHost(
         popEnterTransition = { EnterTransition.None },
         popExitTransition = { ExitTransition.None },
     ) {
-        composable(Destinations.Splash.route) {
+        composable(Destinations.Splash.route) { entry ->
             val splashViewModel: SplashViewModel = viewModel()
-            val lifecycleOwner = LocalLifecycleOwner.current
 
-            LaunchedEffect(splashViewModel, lifecycleOwner) {
-                lifecycleOwner.lifecycle.repeatOnLifecycle(
+            LaunchedEffect(splashViewModel, entry, nav) {
+                entry.lifecycle.repeatOnLifecycle(
                     Lifecycle.State.RESUMED,
                 ) {
                     splashViewModel.event.collect { event ->
                         when (event) {
                             SplashEvent.Navigate -> {
-                                nav.navigate(
-                                    Destinations.OnboardingPosters.route,
+                                if (
+                                    nav.currentDestination?.route ==
+                                    Destinations.Splash.route
                                 ) {
-                                    popUpTo(Destinations.Splash.route) {
-                                        inclusive = true
+                                    nav.navigate(
+                                        Destinations.OnboardingPosters.route
+                                    ) {
+                                        popUpTo(Destinations.Splash.route) {
+                                            inclusive = true
+                                        }
+
+                                        launchSingleTop = true
                                     }
-                                    launchSingleTop = true
                                 }
                             }
                         }
@@ -64,16 +74,16 @@ fun OnboardingNavHost(
             )
         }
 
-        composable(Destinations.OnboardingPosters.route) {
-            val onboardingViewModel: OnboardingViewModel = koinViewModel()
-            val lifecycleOwner = LocalLifecycleOwner.current
+        composable(Destinations.OnboardingPosters.route) { entry ->
+            val onboardingViewModel: OnboardingViewModel =
+                koinViewModel()
 
             LaunchedEffect(
                 onboardingViewModel,
-                lifecycleOwner,
+                entry,
                 onOpenSignIn,
             ) {
-                lifecycleOwner.lifecycle.repeatOnLifecycle(
+                entry.lifecycle.repeatOnLifecycle(
                     Lifecycle.State.RESUMED,
                 ) {
                     onboardingViewModel.events.collect { event ->
@@ -89,6 +99,83 @@ fun OnboardingNavHost(
             OnboardingScreen(
                 viewModel = onboardingViewModel,
             )
+        }
+    }
+}
+
+@Composable
+fun AuthNavHost() {
+    val nav = rememberNavController()
+
+    NavHost(
+        navController = nav,
+        startDestination = AuthEnum.SignIn.name,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+        popEnterTransition = { EnterTransition.None },
+        popExitTransition = { ExitTransition.None },
+    ) {
+        for (mode in AuthEnum.entries) {
+            composable(route = mode.name) { entry ->
+                val authViewModel: AuthViewModel = koinViewModel(
+                    viewModelStoreOwner = entry,
+                    parameters = {
+                        parametersOf(mode)
+                    },
+                )
+
+                LaunchedEffect(authViewModel, entry, nav) {
+                    entry.lifecycle.repeatOnLifecycle(
+                        Lifecycle.State.RESUMED,
+                    ) {
+                        authViewModel.events.collect { event ->
+                            when (event) {
+                                AuthEvent.NavigateToSignUp -> {
+                                    if (
+                                        nav.currentDestination?.route ==
+                                        AuthEnum.SignIn.name
+                                    ) {
+                                        nav.navigate(AuthEnum.SignUp.name) {
+                                            launchSingleTop = true
+                                        }
+                                    }
+                                }
+
+                                AuthEvent.NavigateToSignIn -> {
+                                    if (
+                                        nav.currentDestination?.route ==
+                                        AuthEnum.SignUp.name
+                                    ) {
+                                        nav.popBackStack(
+                                            route = AuthEnum.SignIn.name,
+                                            inclusive = false,
+                                        )
+                                    }
+                                }
+
+                                else -> {
+                                    // Home, forgot password and social
+                                    // authentication will be wired later.
+                                }
+                            }
+                        }
+                    }
+                }
+
+                when (mode) {
+                    AuthEnum.SignIn -> {
+                        SignInScreen(
+                            viewModel = authViewModel,
+                        )
+                    }
+
+                    AuthEnum.SignUp -> {
+                        SignUpScreen(
+                            viewModel = authViewModel,
+                        )
+                    }
+                }
+            }
         }
     }
 }

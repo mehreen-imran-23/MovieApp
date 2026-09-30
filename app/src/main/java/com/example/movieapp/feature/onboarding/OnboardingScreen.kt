@@ -103,8 +103,11 @@ private fun OnboardingContent(
             ) {
                 SkipButton(
                     onClick = {
-                        onIntent(OnboardingIntent.Skip)
-                    },
+                        scope.launch {
+                            pageState.scrollToPage(1)
+                            onIntent(OnboardingIntent.Skip)
+                        }
+                    }
                 )
             }
         },

@@ -1,4 +1,4 @@
-package com.example.movieapp.feature.auth.signin
+package com.example.movieapp.feature.auth.signup
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,10 +27,13 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movieapp.R
@@ -46,24 +48,23 @@ import com.example.movieapp.ui.components.SocialSignInRow
 import com.example.movieapp.ui.theme.MovieWhite
 import com.example.movieapp.ui.theme.PasswordToggle
 import com.example.movieapp.ui.theme.RedPrime
-import com.example.movieapp.ui.theme.Text2
 import com.example.movieapp.ui.theme.TextMuted
 import com.example.movieapp.ui.theme.TextStyles
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-
 @Composable
-fun SignInScreen(
+fun SignUpScreen(
     viewModel: AuthViewModel = koinViewModel(
-        parameters = { parametersOf(AuthEnum.SignIn) },
+        parameters = {
+            parametersOf(AuthEnum.SignUp)
+        },
     ),
-
     modifier: Modifier = Modifier,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    SignInContent(
+    SignUpContent(
         state = state,
         onIntent = { intent ->
             viewModel.onIntent(intent)
@@ -72,9 +73,8 @@ fun SignInScreen(
     )
 }
 
-
 @Composable
-private fun SignInContent(
+private fun SignUpContent(
     state: AuthState,
     onIntent: (AuthIntent) -> Unit,
     modifier: Modifier = Modifier,
@@ -85,7 +85,7 @@ private fun SignInContent(
 
     val focusManager = LocalFocusManager.current
 
-    val signin = {
+    val signup: () -> Unit = {
         if (!state.isLoading) {
             focusManager.clearFocus()
             onIntent(AuthIntent.AuthClicked)
@@ -93,17 +93,19 @@ private fun SignInContent(
     }
 
     AuthLayout(
-        title = stringResource(R.string.signInTitle),
+        title = stringResource(R.string.signupTitle),
         onSkipClick = {
             if (!state.isLoading) {
+                focusManager.clearFocus()
                 onIntent(AuthIntent.SkipClicked)
             }
         },
         footer = {
-            SignUpFooter(
+            SignInFooter(
                 enabled = !state.isLoading,
-                onSignUpClick = {
-                    onIntent(AuthIntent.SignUpClicked)
+                onSignInClick = {
+                    focusManager.clearFocus()
+                    onIntent(AuthIntent.SignInClicked)
                 },
             )
         },
@@ -112,7 +114,6 @@ private fun SignInContent(
         Column(
             modifier = Modifier.fillMaxWidth(),
         ) {
-
             AuthTextField(
                 value = state.email,
                 onValueChange = {
@@ -120,8 +121,8 @@ private fun SignInContent(
                 },
                 placeholder = stringResource(R.string.emailPlace),
                 enabled = !state.isLoading,
-                errorMsg = state.emailError?.let {
-                    stringResource(it)
+                errorMsg = state.emailError?.let { errorId ->
+                    stringResource(errorId)
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
@@ -134,9 +135,7 @@ private fun SignInContent(
                 ),
             )
 
-            Spacer(
-                modifier = Modifier.height(9.dp)
-            )
+            Spacer(Modifier.height(9.dp))
 
             AuthTextField(
                 value = state.password,
@@ -145,8 +144,8 @@ private fun SignInContent(
                 },
                 placeholder = stringResource(R.string.passPlace),
                 enabled = !state.isLoading,
-                errorMsg = state.passwordError?.let {
-                    stringResource(it)
+                errorMsg = state.passwordError?.let { errorId ->
+                    stringResource(errorId)
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
@@ -154,7 +153,7 @@ private fun SignInContent(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        signin()
+                        signup()
                     },
                 ),
                 visualTransformation = if (passVisible) {
@@ -188,19 +187,7 @@ private fun SignInContent(
                 },
             )
 
-            TextButton(
-                onClick = {
-                    onIntent(AuthIntent.ForgotPassClicked)
-                },
-                enabled = !state.isLoading,
-                modifier = Modifier.align(Alignment.End),
-            ) {
-                Text(
-                    text = stringResource(R.string.forgotPass),
-                    style = TextStyles.AuthBody,
-                    color = Text2,
-                )
-            }
+            Spacer(Modifier.height(28.dp))
 
             state.AuthError?.let { errorId ->
                 Text(
@@ -209,27 +196,44 @@ private fun SignInContent(
                     color = RedPrime,
                 )
 
-                Spacer(
-                    modifier = Modifier.height(12.dp)
-                )
+                Spacer(Modifier.height(12.dp))
             }
 
             MovieButton(
                 text = stringResource(
                     if (state.isLoading) {
-                        R.string.signingIn
+                        R.string.signingUp
                     } else {
-                        R.string.signInButton
+                        R.string.signupBtn
                     }
                 ),
-                onClick = signin,
+                onClick = signup,
                 enabled = !state.isLoading,
                 modifier = Modifier.fillMaxWidth(),
             )
 
-            Spacer(
-                modifier = Modifier.height(28.dp)
+            Spacer(Modifier.height(12.dp))
+
+            val terms = stringResource(R.string.signupTerms)
+            val privacyPolicy = stringResource(R.string.privacyPolicy)
+
+            Text(
+                text = buildAnnotatedString {
+                    append(terms)
+                    append(" ")
+
+                    withStyle(
+                        style = SpanStyle(color = MovieWhite),
+                    )
+                    {
+                        append(privacyPolicy)
+                    }
+                },
+                style = TextStyles.Terms,
+                color = TextMuted,
             )
+
+            Spacer(Modifier.height(28.dp))
 
             SocialSignInRow(
                 facebookIcon = R.drawable.facebook_icon,
@@ -250,12 +254,11 @@ private fun SignInContent(
     }
 }
 
-
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun SignUpFooter(
+private fun SignInFooter(
     enabled: Boolean,
-    onSignUpClick: () -> Unit,
+    onSignInClick: () -> Unit,
 ) {
     FlowRow(
         modifier = Modifier.fillMaxWidth(),
@@ -266,20 +269,21 @@ private fun SignUpFooter(
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Text(
-            text = stringResource(R.string.haveAccount),
+            text = stringResource(R.string.accountAlready),
             style = TextStyles.AuthBody,
             color = TextMuted,
         )
 
         Text(
-            text = stringResource(R.string.signupTitle),
+            text = stringResource(R.string.signInTitle),
             style = TextStyles.AuthBody,
             color = MovieWhite,
             modifier = Modifier.clickable(
                 enabled = enabled,
                 role = Role.Button,
-                onClick = onSignUpClick,
+                onClick = onSignInClick,
             ),
         )
     }
 }
+

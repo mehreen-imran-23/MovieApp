@@ -3,6 +3,7 @@ package com.example.movieapp.feature.onboarding
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.movieapp.data.local.GenrePreferences
 import com.example.movieapp.data.repository.OnboardingRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -11,16 +12,19 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class OnboardingViewModel(
     private val repository: OnboardingRepository,
+    private val preferences: GenrePreferences,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(OnboardingState())
     val uiState: StateFlow<OnboardingState> = _uiState.asStateFlow()
+    private var isSavingGenres = false
 
     private val _events = MutableSharedFlow<Onboarding1Event>(
         replay = 0,
@@ -42,6 +46,11 @@ class OnboardingViewModel(
             }
 
             try {
+                val savedGenreIds = preferences.selectedGenreIds.first()
+
+                _uiState.update { state ->
+                    state.copy(selectedGenre = savedGenreIds)
+                }
                 val Urls = repository.getPosterUrls()
                 val Genres = repository.getGenres()
 
@@ -122,10 +131,40 @@ class OnboardingViewModel(
     }
 
     private fun navigateToSignIn() {
+        if (isSavingGenres) {
+            return
+        }
+        isSavingGenres = true
+
         viewModelScope.launch {
-            _events.emit(
-                Onboarding1Event.NavigateToSignIn
-            )
+            try {
+                val selectedIds =
+                    if (_uiState.value.isLoading) {
+                        preferences.selectedGenreIds.first()
+                    } else {
+                        _uiState.value.selectedGenre
+                    }
+
+                preferences.saveSelectedGenres(selectedIds)
+
+                _events.emit(Onboarding1Event.NavigateToSignIn)
+            } catch (exception: CancellationException) {
+                throw exception
+            } catch (exception: Exception) {
+                Log.e(
+                    "OnboardingViewModel",
+                    "Could not save selected genres",
+                    exception,
+                )
+
+                _uiState.update { state ->
+                    state.copy(
+                        errorMsg = "Could not save your selection. Please try again.",
+                    )
+                }
+            } finally {
+                isSavingGenres = false
+            }
         }
     }
 }

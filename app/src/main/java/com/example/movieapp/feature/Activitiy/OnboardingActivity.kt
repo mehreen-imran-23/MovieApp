@@ -37,12 +37,8 @@ class OnboardingActivity : ComponentActivity() {
     }
 
     private fun openSignIn() {
-        if (opening) return
-        opening = true
-
         startActivity(
             Intent(this, AuthActivity::class.java)
         )
-        finish()
     }
 }

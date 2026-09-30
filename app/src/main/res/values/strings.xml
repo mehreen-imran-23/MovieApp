@@ -9,17 +9,19 @@
 <string name="Next">Next</string>
 <string name="Skip">Skip</string>
 <string name="signInTitle">Sign In</string>
-<string name="sinInButton">Sign in</string>
+<string name="signInButton">Sign in</string>
 <string name="emailPlace">E-mail</string>
 <string name="passPlace">Password</string>
 <string name="forgotPass">Forgot password?</string>
 <string name="or">or</string>
-<string name="haveAccount">Don’t you have an account? <annotation key="action" value="sign_up">Sign Up</annotation></string>
+    <string name="haveAccount">Don’t you have an account?</string>
+
 
 <string name="signupTitle">Sign Up</string>
 <string name="signupBtn">Sign up</string>
-<string name="signupTerms">By clicking the “sign up” button, you accept the terms of the <annotation key="action" value="privacy_policy">Privacy Policy</annotation></string>
-<string name="accountAlready">Already have an account? <annotation key="action" value="sign_in">Sign In</annotation></string>
+    <string name="signupTerms">By clicking the “sign up” button, you accept the terms of the</string>
+    <string name="privacyPolicy">Privacy Policy</string>
+    <string name="accountAlready">Already have an account?</string>
 
 <string name="signupSuccess">Sign up successfully!</string>
 <string name="MoreInfo">Tell us more about you</string>
@@ -30,9 +32,9 @@
 <string name="homeGreeting">Hey, %1$s</string>
 <string name="Trending">TRENDING</string>
 <string name="recommendedMovies">Recommended Movies</string>
-<string name="see_all">See all</string>
+<string name="seeAll">See all</string>
 <string name="Book">Book</string>
-<string name="watch_trailer">Watch Trailer</string>
+<string name="watchTrailer">Watch Trailer</string>
 <string name="navMovies">Movies</string>
 
 <string name="searchMovies">Search any movies name here</string>
@@ -41,14 +43,14 @@
 
 <string name="rating">Censor Rating</string>
 <string name="duration">Duration</string>
-<string name="release_date">Release date</string>
+<string name="releaseDate">Release date</string>
 <string name="languages">Available in languages</string>
 <string name="plot">Story Plot</string>
 <string name="cast">Cast</string>
-<string name="book_tickets">Book Tickets</string>
+<string name="bookTickets">Book Tickets</string>
 <string name="back">Go back</string>
 <string name="search">Search movies</string>
-<string name="open_profile">Open profile</string>
+<string name="openProfile">Open profile</string>
 <string name="filter">Filter movies</string>
 <string name="moreOptions">More options</string>
 <string name="showPass">Show password</string>
@@ -56,20 +58,21 @@
 <string name="facebook">Continue with Facebook</string>
 <string name="google">Continue with Google</string>
 <string name="apple">Continue with Apple</string>
-<string name="movie_trailer">Watch trailer for %1$s</string>
+<string name="movieTrailer">Watch trailer for %1$s</string>
+
     <string name="Postershimmer">Poster shimmer</string>
     <string name="GenreShimmer"> Genre shimmer</string>
-
     <string name="EmailReq">Please enter your email address.</string>
+
     <string name="InvalidEmail">Please enter a valid email address.</string>
     <string name="PassReq">Please enter your password.</string>
-
-    <string name="Loadingg">Signing in…</string>
-
+    <string name="signingIn">Signing in…</string>
     <string name="invaldiCredentials">Incorrect email or password.</string>
     <string name="NetworkError">Unable to connect. Please check your internet connection.</string>
     <string name="GenError">Unable to sign in. Please try again.</string>
-    <string name="Accprompt">Don’t you have an account?</string>
+    <string name="Retry">Could not save your selection. Please try again.</string>
+    <string name="ValidPass">Password must contain at least 8 characters, 1 uppercase letter, 1 number, and 1 special character.</string>
+    <string name="signingUp">Signing up…</string>
     <string name="signin_signup_link">Sign Up</string>
-
+    <string name="InvalidPassword">Invalid password.</string>
     </resources>
