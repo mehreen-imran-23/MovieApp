@@ -36,13 +36,13 @@ fun AuthLayout(
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .imePadding(),
+            .imePadding()
+            .statusBarsPadding(),
         containerColor = MovieBg,
         topBar = {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .statusBarsPadding()
                     .padding(end = 10.dp),
                 contentAlignment = Alignment.CenterEnd,
             ) {

@@ -37,7 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movieapp.R
 import com.example.movieapp.feature.auth.AuthEnum
 import com.example.movieapp.feature.auth.AuthIntent
-import com.example.movieapp.feature.auth.AuthState
+import com.example.movieapp.feature.auth.AuthUIState
 import com.example.movieapp.feature.auth.AuthViewModel
 import com.example.movieapp.ui.components.AuthLayout
 import com.example.movieapp.ui.components.AuthTextField
@@ -75,7 +75,7 @@ fun SignInScreen(
 
 @Composable
 private fun SignInContent(
-    state: AuthState,
+    state: AuthUIState,
     onIntent: (AuthIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {

@@ -18,26 +18,26 @@ class AuthViewModel(
 
     private val _uiState = MutableStateFlow(AuthState())
     val uiState: StateFlow<AuthState> = _uiState.asStateFlow()
-    private val _events = MutableSharedFlow<AuthEvent>(
-        replay = 0,
-    )
+
+    private val _events = MutableSharedFlow<AuthEvent>(replay = 0)
     val events: SharedFlow<AuthEvent> = _events.asSharedFlow()
-    private val emailRegex =
-        Regex("""^[A-Za-z0-9]+(?:[._%+-][A-Za-z0-9]+)*@[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*(?:\.[A-Za-z]{2,})+$""")
+
+    private val emailRegex = Regex("""^[A-Za-z0-9]+(?:[._%+-][A-Za-z0-9]+)*@[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*(?:\.[A-Za-z]{2,})+$""")
     private val passwordRegex = Regex("""^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9\s]).{8,}$""")
 
-
     fun onIntent(intent: AuthIntent) {
-        if (_uiState.value.isLoading) {
-            return
-        }
+        if (_uiState.value.button.isLoading) return
+
         when (intent) {
             is AuthIntent.EmailChanged -> {
                 _uiState.update { state ->
                     state.copy(
-                        email = intent.email,
-                        emailError = null,
+                        email = state.email.copy(
+                            input = intent.email,
+                            errorMsg = null,
+                        ),
                         AuthError = null,
+                        successMsg = null,
                     )
                 }
             }
@@ -45,9 +45,12 @@ class AuthViewModel(
             is AuthIntent.PasswordChanged -> {
                 _uiState.update { state ->
                     state.copy(
-                        password = intent.password,
-                        passError = null,
+                        password = state.password.copy(
+                            input = intent.password,
+                            errorMsg = null,
+                        ),
                         AuthError = null,
+                        successMsg = null,
                     )
                 }
             }
@@ -59,52 +62,41 @@ class AuthViewModel(
                 }
             }
 
-            AuthIntent.ForgotPassClicked -> {
+            AuthIntent.ForgotPassClicked ->
                 sendEvent(AuthEvent.NavigateToForgotPass)
-            }
 
-            AuthIntent.SignUpClicked -> {
+            AuthIntent.SignUpClicked ->
                 sendEvent(AuthEvent.NavigateToSignUp)
-            }
 
-            AuthIntent.SignInClicked -> {
+            AuthIntent.SignInClicked ->
                 sendEvent(AuthEvent.NavigateToSignIn)
-            }
 
-            AuthIntent.SkipClicked -> {
+            AuthIntent.SkipClicked ->
                 sendEvent(AuthEvent.NavigateToHome)
-            }
 
-            AuthIntent.GoogleClicked -> {
+            AuthIntent.GoogleClicked ->
                 sendEvent(AuthEvent.GoogleAuth)
-            }
 
-            AuthIntent.FacebookClicked -> {
+            AuthIntent.FacebookClicked ->
                 sendEvent(AuthEvent.FacebookAuth)
-            }
 
-            AuthIntent.AppleClicked -> {
+            AuthIntent.AppleClicked ->
                 sendEvent(AuthEvent.AppleAuth)
-            }
         }
     }
 
     private fun validateAndSignIn() {
-        if (!validateInput()) {
-            return
-        }
+        if (!validateInput()) return
     }
 
     private fun validateAndSignUp() {
-        if (!validateInput()) {
-            return
-        }
+        if (!validateInput()) return
     }
 
     private fun validateInput(): Boolean {
         val state = _uiState.value
-        val email = state.email.trim()
-        val password = state.password
+        val email = state.email.input.trim()
+        val password = state.password.input
 
         val emailError = when {
             email.isEmpty() -> R.string.EmailReq
@@ -112,22 +104,33 @@ class AuthViewModel(
             else -> null
         }
 
-        val passError =
-            when {
-                password.isEmpty() -> R.string.PassReq
-                mode == AuthEnum.SignIn && password.length < 8 -> R.string.InvalidPassword
-                mode == AuthEnum.SignUp && !passwordRegex.matches(password) -> R.string.ValidPass
-                else -> null
-            }
+        val passError = when {
+            password.isEmpty() -> R.string.PassReq
+
+            mode == AuthEnum.SignIn && password.length < 8 ->
+                R.string.InvalidPassword
+
+            mode == AuthEnum.SignUp &&
+                    !passwordRegex.matches(password) ->
+                R.string.ValidPass
+
+            else -> null
+        }
 
         _uiState.update { currentState ->
             currentState.copy(
-                email = email,
-                emailError = emailError,
-                passError = passError,
+                email = currentState.email.copy(
+                    input = email,
+                    errorMsg = emailError,
+                ),
+                password = currentState.password.copy(
+                    errorMsg = passError,
+                ),
                 AuthError = null,
+                successMsg = null,
             )
         }
+
         return emailError == null && passError == null
     }
 
