@@ -3,6 +3,10 @@ package com.example.movieapp.feature.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.R
+import com.example.movieapp.data.local.LocalPreferences
+import com.example.movieapp.data.repository.AuthRepository
+import com.example.movieapp.data.repository.AuthResult
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -14,17 +18,16 @@ import kotlinx.coroutines.launch
 
 class AuthViewModel(
     private val mode: AuthEnum,
+    private val repository: AuthRepository,
+    private val preferences: LocalPreferences,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(AuthState())
-    val uiState: StateFlow<AuthState> = _uiState.asStateFlow()
-
+    private val _uiState = MutableStateFlow(AuthUiState())
+    val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
     private val _events = MutableSharedFlow<AuthEvent>(replay = 0)
     val events: SharedFlow<AuthEvent> = _events.asSharedFlow()
-
     private val emailRegex = Regex("""^[A-Za-z0-9]+(?:[._%+-][A-Za-z0-9]+)*@[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*(?:\.[A-Za-z]{2,})+$""")
     private val passwordRegex = Regex("""^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9\s]).{8,}$""")
-
     fun onIntent(intent: AuthIntent) {
         if (_uiState.value.button.isLoading) return
 
@@ -72,7 +75,7 @@ class AuthViewModel(
                 sendEvent(AuthEvent.NavigateToSignIn)
 
             AuthIntent.SkipClicked ->
-                sendEvent(AuthEvent.NavigateToHome)
+                continueAsGuest()
 
             AuthIntent.GoogleClicked ->
                 sendEvent(AuthEvent.GoogleAuth)
@@ -87,10 +90,148 @@ class AuthViewModel(
 
     private fun validateAndSignIn() {
         if (!validateInput()) return
+        authenticate()
     }
 
     private fun validateAndSignUp() {
         if (!validateInput()) return
+        authenticate()
+    }
+
+    private fun authenticate() {
+        val email = _uiState.value.email.input
+        val password = _uiState.value.password.input
+
+        _uiState.update { state ->
+            state.copy(
+                button = state.button.copy(isLoading = true),
+                AuthError = null,
+                successMsg = null,
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val result = when (mode) {
+                    AuthEnum.SignIn -> repository.signIn(
+                        email = email,
+                        password = password,
+                    )
+
+                    AuthEnum.SignUp -> repository.signUp(
+                        email = email,
+                        password = password,
+                    )
+                }
+
+                when (result)
+                {
+                    is AuthResult.Success -> {
+                        if (mode == AuthEnum.SignIn)
+                        {
+                            preferences.saveLogin(result.userId)
+                        }
+
+                        _uiState.update { state ->
+                            state.copy(
+                                password = InputFieldState(),
+                                successMsg = when (mode)
+                                {
+                                    AuthEnum.SignIn ->
+                                        R.string.signinSuccess
+                                    AuthEnum.SignUp ->
+                                        R.string.signupSuccess
+                                },
+                            )
+                        }
+
+                        val event = when (mode)
+                        {
+                            AuthEnum.SignIn ->
+                                AuthEvent.NavigateToHome
+
+                            AuthEnum.SignUp ->
+                                AuthEvent.NavigateToSignIn
+                        }
+
+                        _events.emit(event)
+                    }
+
+                    AuthResult.EmailAlreadyExists -> {
+                        _uiState.update { state ->
+                            state.copy(
+                                AuthError = R.string.emailAlreadyExists,
+                            )
+                        }
+                    }
+
+                    AuthResult.InvalidCredentials -> {
+                        _uiState.update { state ->
+                            state.copy(
+                                AuthError = R.string.invaldiCredentials,
+                            )
+                        }
+                    }
+                }
+            }
+            catch (exception: CancellationException)
+            {
+                throw exception
+            }
+            catch (exception: Exception)
+            {
+                _uiState.update { state ->
+                    state.copy(
+                        AuthError = R.string.authFailed,
+                    )
+                }
+            }
+            finally
+            {
+                _uiState.update { state ->
+                    state.copy(
+                        button = state.button.copy(isLoading = false),
+                    )
+                }
+            }
+        }
+    }
+
+    private fun continueAsGuest() {
+        _uiState.update { state ->
+            state.copy(
+                button = state.button.copy(isLoading = true),
+                AuthError = null,
+                successMsg = null,
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                preferences.saveGuest()
+                _events.emit(AuthEvent.NavigateToHome)
+            }
+            catch (exception: CancellationException)
+            {
+                throw exception
+            }
+            catch (exception: Exception)
+            {
+                _uiState.update { state ->
+                    state.copy(
+                        AuthError = R.string.authFailed,
+                    )
+                }
+            }
+            finally
+            {
+                _uiState.update { state ->
+                    state.copy(
+                        button = state.button.copy(isLoading = false),
+                    )
+                }
+            }
+        }
     }
 
     private fun validateInput(): Boolean {
@@ -98,13 +239,15 @@ class AuthViewModel(
         val email = state.email.input.trim()
         val password = state.password.input
 
-        val emailError = when {
+        val emailError = when
+        {
             email.isEmpty() -> R.string.EmailReq
             !emailRegex.matches(email) -> R.string.InvalidEmail
             else -> null
         }
 
-        val passError = when {
+        val passError = when
+        {
             password.isEmpty() -> R.string.PassReq
 
             mode == AuthEnum.SignIn && password.length < 8 ->

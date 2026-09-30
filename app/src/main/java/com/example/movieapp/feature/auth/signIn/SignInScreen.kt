@@ -37,7 +37,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movieapp.R
 import com.example.movieapp.feature.auth.AuthEnum
 import com.example.movieapp.feature.auth.AuthIntent
-import com.example.movieapp.feature.auth.AuthUIState
 import com.example.movieapp.feature.auth.AuthViewModel
 import com.example.movieapp.ui.components.AuthLayout
 import com.example.movieapp.ui.components.AuthTextField
@@ -51,6 +50,7 @@ import com.example.movieapp.ui.theme.TextMuted
 import com.example.movieapp.ui.theme.TextStyles
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import com.example.movieapp.feature.auth.AuthUiState
 
 
 @Composable
@@ -75,7 +75,7 @@ fun SignInScreen(
 
 @Composable
 private fun SignInContent(
-    state: AuthUIState,
+    state: AuthUiState,
     onIntent: (AuthIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -86,7 +86,7 @@ private fun SignInContent(
     val focusManager = LocalFocusManager.current
 
     val signin = {
-        if (!state.isLoading) {
+        if (!state.button.isLoading) {
             focusManager.clearFocus()
             onIntent(AuthIntent.AuthClicked)
         }
@@ -95,13 +95,13 @@ private fun SignInContent(
     AuthLayout(
         title = stringResource(R.string.signInTitle),
         onSkipClick = {
-            if (!state.isLoading) {
+            if (!state.button.isLoading) {
                 onIntent(AuthIntent.SkipClicked)
             }
         },
         footer = {
             SignUpFooter(
-                enabled = !state.isLoading,
+                enabled = !state.button.isLoading,
                 onSignUpClick = {
                     onIntent(AuthIntent.SignUpClicked)
                 },
@@ -114,13 +114,13 @@ private fun SignInContent(
         ) {
 
             AuthTextField(
-                value = state.email,
+                value = state.email.input,
                 onValueChange = {
                     onIntent(AuthIntent.EmailChanged(it))
                 },
                 placeholder = stringResource(R.string.emailPlace),
-                enabled = !state.isLoading,
-                errorMsg = state.emailError?.let {
+                enabled = !state.button.isLoading,
+                errorMsg = state.email.errorMsg?.let {
                     stringResource(it)
                 },
                 keyboardOptions = KeyboardOptions(
@@ -139,13 +139,13 @@ private fun SignInContent(
             )
 
             AuthTextField(
-                value = state.password,
+                value = state.password.input,
                 onValueChange = {
                     onIntent(AuthIntent.PasswordChanged(it))
                 },
                 placeholder = stringResource(R.string.passPlace),
-                enabled = !state.isLoading,
-                errorMsg = state.passwordError?.let {
+                enabled = !state.button.isLoading,
+                errorMsg = state.password.errorMsg?.let {
                     stringResource(it)
                 },
                 keyboardOptions = KeyboardOptions(
@@ -167,7 +167,7 @@ private fun SignInContent(
                         onClick = {
                             passVisible = !passVisible
                         },
-                        enabled = !state.isLoading,
+                        enabled = !state.button.isLoading,
                     ) {
                         Icon(
                             imageVector = if (passVisible) {
@@ -189,10 +189,11 @@ private fun SignInContent(
             )
 
             TextButton(
-                onClick = {
+                onClick =
+                    {
                     onIntent(AuthIntent.ForgotPassClicked)
                 },
-                enabled = !state.isLoading,
+                enabled = !state.button.isLoading,
                 modifier = Modifier.align(Alignment.End),
             ) {
                 Text(
@@ -216,14 +217,14 @@ private fun SignInContent(
 
             MovieButton(
                 text = stringResource(
-                    if (state.isLoading) {
+                    if (state.button.isLoading) {
                         R.string.signingIn
                     } else {
                         R.string.signInButton
                     }
                 ),
                 onClick = signin,
-                enabled = !state.isLoading,
+                enabled = !state.button.isLoading,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -244,13 +245,11 @@ private fun SignInContent(
                 onAppleClick = {
                     onIntent(AuthIntent.AppleClicked)
                 },
-                enabled = !state.isLoading,
+                enabled = !state.button.isLoading,
             )
         }
     }
 }
-
-
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SignUpFooter(

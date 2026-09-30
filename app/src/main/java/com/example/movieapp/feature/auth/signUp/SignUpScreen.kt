@@ -39,7 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movieapp.R
 import com.example.movieapp.feature.auth.AuthEnum
 import com.example.movieapp.feature.auth.AuthIntent
-import com.example.movieapp.feature.auth.AuthUIState
+import com.example.movieapp.feature.auth.AuthUiState
 import com.example.movieapp.feature.auth.AuthViewModel
 import com.example.movieapp.ui.components.AuthLayout
 import com.example.movieapp.ui.components.AuthTextField
@@ -75,7 +75,7 @@ fun SignUpScreen(
 
 @Composable
 private fun SignUpContent(
-    state: AuthUIState,
+    state: AuthUiState,
     onIntent: (AuthIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -86,7 +86,7 @@ private fun SignUpContent(
     val focusManager = LocalFocusManager.current
 
     val signup: () -> Unit = {
-        if (!state.isLoading) {
+        if (!state.button.isLoading) {
             focusManager.clearFocus()
             onIntent(AuthIntent.AuthClicked)
         }
@@ -95,14 +95,14 @@ private fun SignUpContent(
     AuthLayout(
         title = stringResource(R.string.signupTitle),
         onSkipClick = {
-            if (!state.isLoading) {
+            if (!state.button.isLoading) {
                 focusManager.clearFocus()
                 onIntent(AuthIntent.SkipClicked)
             }
         },
         footer = {
             SignInFooter(
-                enabled = !state.isLoading,
+                enabled = !state.button.isLoading,
                 onSignInClick = {
                     focusManager.clearFocus()
                     onIntent(AuthIntent.SignInClicked)
@@ -115,13 +115,13 @@ private fun SignUpContent(
             modifier = Modifier.fillMaxWidth(),
         ) {
             AuthTextField(
-                value = state.email,
+                value = state.email.input,
                 onValueChange = {
                     onIntent(AuthIntent.EmailChanged(it))
                 },
                 placeholder = stringResource(R.string.emailPlace),
-                enabled = !state.isLoading,
-                errorMsg = state.emailError?.let { errorId ->
+                enabled = !state.button.isLoading,
+                errorMsg = state.email.errorMsg?.let { errorId ->
                     stringResource(errorId)
                 },
                 keyboardOptions = KeyboardOptions(
@@ -138,13 +138,13 @@ private fun SignUpContent(
             Spacer(Modifier.height(9.dp))
 
             AuthTextField(
-                value = state.password,
+                value = state.password.input,
                 onValueChange = {
                     onIntent(AuthIntent.PasswordChanged(it))
                 },
                 placeholder = stringResource(R.string.passPlace),
-                enabled = !state.isLoading,
-                errorMsg = state.passwordError?.let { errorId ->
+                enabled = !state.button.isLoading,
+                errorMsg = state.password.errorMsg?.let { errorId ->
                     stringResource(errorId)
                 },
                 keyboardOptions = KeyboardOptions(
@@ -166,7 +166,7 @@ private fun SignUpContent(
                         onClick = {
                             passVisible = !passVisible
                         },
-                        enabled = !state.isLoading,
+                        enabled = !state.button.isLoading,
                     ) {
                         Icon(
                             imageVector = if (passVisible) {
@@ -201,14 +201,17 @@ private fun SignUpContent(
 
             MovieButton(
                 text = stringResource(
-                    if (state.isLoading) {
+                    if (state.button.isLoading)
+                    {
                         R.string.signingUp
-                    } else {
+                    }
+                    else
+                    {
                         R.string.signupBtn
                     }
                 ),
                 onClick = signup,
-                enabled = !state.isLoading,
+                enabled = !state.button.isLoading,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -248,7 +251,7 @@ private fun SignUpContent(
                 onAppleClick = {
                     onIntent(AuthIntent.AppleClicked)
                 },
-                enabled = !state.isLoading,
+                enabled = !state.button.isLoading,
             )
         }
     }

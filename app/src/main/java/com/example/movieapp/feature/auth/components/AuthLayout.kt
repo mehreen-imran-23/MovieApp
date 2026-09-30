@@ -1,5 +1,6 @@
 package com.example.movieapp.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -36,8 +37,9 @@ fun AuthLayout(
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .imePadding()
-            .statusBarsPadding(),
+            .background(MovieBg)
+            .statusBarsPadding()
+            .imePadding(),
         containerColor = MovieBg,
         topBar = {
             Box(

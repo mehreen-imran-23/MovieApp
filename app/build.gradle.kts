@@ -2,6 +2,8 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+
 }
 val movieLocalProperties = Properties().apply {
     val propertiesFile = rootProject.file("local.properties")
@@ -62,7 +64,6 @@ android {
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.camera.core)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
@@ -87,9 +88,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
     implementation("io.insert-koin:koin-android:4.1.1")
     implementation("io.insert-koin:koin-androidx-compose:4.1.1")
-    implementation("androidx.compose.material3:material3:...")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.datastore:datastore-preferences:1.2.1")
-
-
+    implementation("org.bouncycastle:bcprov-jdk15to18:1.86")
+    ksp("androidx.room3:room3-compiler:3.0.3")
+}
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }

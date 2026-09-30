@@ -3,7 +3,7 @@ package com.example.movieapp.feature.onboarding
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movieapp.data.local.GenrePreferences
+import com.example.movieapp.data.local.LocalPreferences
 import com.example.movieapp.data.repository.OnboardingRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,7 +19,7 @@ import retrofit2.HttpException
 
 class OnboardingViewModel(
     private val repository: OnboardingRepository,
-    private val preferences: GenrePreferences,
+    private val preferences: LocalPreferences,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(OnboardingState())
@@ -51,10 +51,10 @@ class OnboardingViewModel(
                 _uiState.update { state ->
                     state.copy(selectedGenre = savedGenreIds)
                 }
-                val Urls = repository.getPosterUrls()
-                val Genres = repository.getGenres()
+                val urls = repository.getPosterUrls()
+                val genres = repository.getGenres()
 
-                val genres = Genres.map { genre ->
+                val genre = genres.map { genre ->
                     OnboardingGenre(
                         id = genre.id,
                         name = genre.name,
@@ -63,8 +63,8 @@ class OnboardingViewModel(
 
                 _uiState.update { state ->
                     state.copy(
-                        posterUrls = Urls,
-                        genres = genres,
+                        posterUrls = urls,
+                        genres = genre,
                         isLoading = false,
                         errorMsg = null,
                     )
@@ -148,9 +148,13 @@ class OnboardingViewModel(
                 preferences.saveSelectedGenres(selectedIds)
 
                 _events.emit(Onboarding1Event.NavigateToSignIn)
-            } catch (exception: CancellationException) {
+            }
+            catch (exception: CancellationException)
+            {
                 throw exception
-            } catch (exception: Exception) {
+            }
+            catch (exception: Exception)
+            {
                 Log.e(
                     "OnboardingViewModel",
                     "Could not save selected genres",
@@ -162,7 +166,8 @@ class OnboardingViewModel(
                         errorMsg = "Could not save your selection. Please try again.",
                     )
                 }
-            } finally {
+            } finally
+            {
                 isSavingGenres = false
             }
         }

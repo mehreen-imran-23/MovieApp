@@ -2,6 +2,7 @@ package com.example.movieapp
 
 import android.app.Application
 import com.example.movieapp.di.appModule
+import com.example.movieapp.di.networkModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -11,9 +12,8 @@ class MovieAppKoin : Application() {
         super.onCreate()
 
         startKoin {
-
             androidContext(this@MovieAppKoin)
-
+            modules(networkModule, appModule)
             modules(appModule)
         }
     }

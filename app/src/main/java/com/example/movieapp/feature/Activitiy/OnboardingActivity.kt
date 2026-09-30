@@ -1,6 +1,7 @@
 package com.example.movieapp.feature.onboarding
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -12,33 +13,28 @@ import com.example.movieapp.ui.theme.MovieAppTheme
 
 class OnboardingActivity : ComponentActivity() {
 
-    private var opening = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.dark(
-                android.graphics.Color.TRANSPARENT
-            ),
-            navigationBarStyle = SystemBarStyle.dark(
-                android.graphics.Color.TRANSPARENT
-            ),
-        )
 
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+        )
 
         setContent {
             MovieAppTheme {
                 OnboardingNavHost(
                     versionName = "1.0.1",
-                    onOpenSignIn = ::openSignIn,
+                    onOpenSignIn = {
+                        startActivity(
+                            Intent(
+                                this@OnboardingActivity,
+                                AuthActivity::class.java,
+                            )
+                        )
+                    },
                 )
             }
         }
-    }
-
-    private fun openSignIn() {
-        startActivity(
-            Intent(this, AuthActivity::class.java)
-        )
     }
 }

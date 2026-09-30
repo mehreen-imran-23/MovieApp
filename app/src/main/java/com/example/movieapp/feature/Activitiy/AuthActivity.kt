@@ -15,17 +15,15 @@ class AuthActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.dark(
-                Color.TRANSPARENT
-            ),
-            navigationBarStyle = SystemBarStyle.dark(
-                Color.TRANSPARENT
-            ),
+            statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
         )
 
         setContent {
             MovieAppTheme {
-                AuthNavHost()
+                AuthNavHost(
+                    onOpenHome = {},
+                )
             }
         }
     }

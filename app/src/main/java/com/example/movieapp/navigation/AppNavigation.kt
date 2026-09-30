@@ -104,7 +104,9 @@ fun OnboardingNavHost(
 }
 
 @Composable
-fun AuthNavHost() {
+fun AuthNavHost(
+    onOpenHome: () -> Unit,
+) {
     val nav = rememberNavController()
 
     NavHost(
@@ -124,7 +126,12 @@ fun AuthNavHost() {
                     },
                 )
 
-                LaunchedEffect(authViewModel, entry, nav) {
+                LaunchedEffect(
+                    authViewModel,
+                    entry,
+                    nav,
+                    onOpenHome,
+                ) {
                     entry.lifecycle.repeatOnLifecycle(
                         Lifecycle.State.RESUMED,
                     ) {
@@ -153,10 +160,11 @@ fun AuthNavHost() {
                                     }
                                 }
 
-                                else -> {
-                                    // Home, forgot password and social
-                                    // authentication will be wired later.
+                                AuthEvent.NavigateToHome -> {
+                                    onOpenHome()
                                 }
+
+                                else -> Unit
                             }
                         }
                     }

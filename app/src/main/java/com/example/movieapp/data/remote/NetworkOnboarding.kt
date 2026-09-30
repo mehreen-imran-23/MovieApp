@@ -4,7 +4,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object NetworkOnboarding {
+class NetworkOnboarding {
 
     fun createHttpClient(token: String): OkHttpClient {
         return OkHttpClient.Builder()
