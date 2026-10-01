@@ -141,7 +141,8 @@ class OnboardingViewModel(
                 val selectedIds =
                     if (_uiState.value.isLoading) {
                         preferences.selectedGenreIds.first()
-                    } else {
+                    }
+                    else {
                         _uiState.value.selectedGenre
                     }
 

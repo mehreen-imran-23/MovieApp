@@ -58,6 +58,7 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+        viewBinding = true
     }
 }
 
@@ -65,12 +66,14 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.remote.creation.core)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.text)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room3.common)
     implementation(libs.androidx.room3.runtime)
     testImplementation(libs.junit)
@@ -92,6 +95,8 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.2.1")
     implementation("org.bouncycastle:bcprov-jdk15to18:1.86")
     ksp("androidx.room3:room3-compiler:3.0.3")
+    implementation(libs.material.views)
+
 }
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")

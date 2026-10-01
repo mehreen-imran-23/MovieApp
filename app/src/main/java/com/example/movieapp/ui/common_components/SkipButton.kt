@@ -23,7 +23,7 @@ fun SkipButton(
         modifier = modifier.heightIn(min = 48.dp),
     ) {
         Text(
-            text = stringResource(R.string.Skip),
+            text = stringResource(R.string.skip),
             style = TextStyles.SkipLabel,
             color = Text2,
         )

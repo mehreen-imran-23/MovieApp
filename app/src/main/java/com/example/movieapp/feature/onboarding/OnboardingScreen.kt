@@ -152,7 +152,7 @@ private fun OnboardingContent(
                 }
 
                 OnboardingStep.Genre -> OnboardingPage(
-                    description = stringResource(R.string.genresSelect),
+                    description = stringResource(R.string.genres_select),
                     errorMsg = state.errorMsg,
                 ) {
                     GenreList(
@@ -189,7 +189,7 @@ private fun OnboardingBottomBar(
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         MovieButton(
-            text = stringResource(R.string.Next),
+            text = stringResource(R.string.next),
             onClick = onNext,
             enabled = enabled,
             modifier = Modifier

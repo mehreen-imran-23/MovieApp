@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.example.movieapp.feature.Activitiy.HomeActivity
 import com.example.movieapp.feature.auth.AuthActivity
 import com.example.movieapp.navigation.OnboardingNavHost
 import com.example.movieapp.ui.theme.MovieAppTheme
@@ -25,6 +26,7 @@ class OnboardingActivity : ComponentActivity() {
             MovieAppTheme {
                 OnboardingNavHost(
                     versionName = "1.0.1",
+
                     onOpenSignIn = {
                         startActivity(
                             Intent(
@@ -32,6 +34,16 @@ class OnboardingActivity : ComponentActivity() {
                                 AuthActivity::class.java,
                             )
                         )
+                    },
+
+                    onOpenHome = {
+                        startActivity(
+                            Intent(
+                                this@OnboardingActivity,
+                                HomeActivity::class.java,
+                            )
+                        )
+                        finish()
                     },
                 )
             }

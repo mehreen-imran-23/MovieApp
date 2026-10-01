@@ -93,7 +93,7 @@ private fun SignInContent(
     }
 
     AuthLayout(
-        title = stringResource(R.string.signInTitle),
+        title = stringResource(R.string.sign_in_title),
         onSkipClick = {
             if (!state.button.isLoading) {
                 onIntent(AuthIntent.SkipClicked)
@@ -118,7 +118,7 @@ private fun SignInContent(
                 onValueChange = {
                     onIntent(AuthIntent.EmailChanged(it))
                 },
-                placeholder = stringResource(R.string.emailPlace),
+                placeholder = stringResource(R.string.email_place),
                 enabled = !state.button.isLoading,
                 errorMsg = state.email.errorMsg?.let {
                     stringResource(it)
@@ -143,9 +143,9 @@ private fun SignInContent(
                 onValueChange = {
                     onIntent(AuthIntent.PasswordChanged(it))
                 },
-                placeholder = stringResource(R.string.passPlace),
+                placeholder = stringResource(R.string.pass_place),
                 enabled = !state.button.isLoading,
-                errorMsg = state.password.errorMsg?.let {
+                errorMsg = (state.password.errorMsg ?: state.AuthError)?.let {
                     stringResource(it)
                 },
                 keyboardOptions = KeyboardOptions(
@@ -159,7 +159,8 @@ private fun SignInContent(
                 ),
                 visualTransformation = if (passVisible) {
                     VisualTransformation.None
-                } else {
+                }
+                else {
                     PasswordVisualTransformation()
                 },
                 trailingIcon = {
@@ -177,9 +178,9 @@ private fun SignInContent(
                             },
                             contentDescription = stringResource(
                                 if (passVisible) {
-                                    R.string.hidePass
+                                    R.string.hide_pass
                                 } else {
-                                    R.string.showPass
+                                    R.string.show_pass
                                 }
                             ),
                             tint = PasswordToggle,
@@ -189,38 +190,30 @@ private fun SignInContent(
             )
 
             TextButton(
-                onClick =
-                    {
+                onClick = {
                     onIntent(AuthIntent.ForgotPassClicked)
                 },
                 enabled = !state.button.isLoading,
                 modifier = Modifier.align(Alignment.End),
             ) {
                 Text(
-                    text = stringResource(R.string.forgotPass),
+                    text = stringResource(R.string.forgot_pass),
                     style = TextStyles.AuthBody,
                     color = Text2,
                 )
             }
 
-            state.AuthError?.let { errorId ->
-                Text(
-                    text = stringResource(errorId),
-                    style = TextStyles.Terms,
-                    color = RedPrime,
-                )
-
-                Spacer(
-                    modifier = Modifier.height(12.dp)
-                )
-            }
+            Spacer(
+                modifier = Modifier.height(12.dp)
+            )
 
             MovieButton(
                 text = stringResource(
                     if (state.button.isLoading) {
-                        R.string.signingIn
-                    } else {
-                        R.string.signInButton
+                        R.string.signing_in
+                    }
+                    else {
+                        R.string.sign_in_button
                     }
                 ),
                 onClick = signin,
@@ -265,13 +258,13 @@ private fun SignUpFooter(
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Text(
-            text = stringResource(R.string.haveAccount),
+            text = stringResource(R.string.have_account),
             style = TextStyles.AuthBody,
             color = TextMuted,
         )
 
         Text(
-            text = stringResource(R.string.signupTitle),
+            text = stringResource(R.string.signup_title),
             style = TextStyles.AuthBody,
             color = MovieWhite,
             modifier = Modifier.clickable(

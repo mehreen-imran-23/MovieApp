@@ -9,10 +9,14 @@ class AuthRepository(
     private val passwHash: PassHash,
 ) {
 
-    suspend fun signUp(email: String, password: String,): AuthResult {
+    suspend fun signUp(email: String, password: String,
+        selectedGenreIds: Set<Int>,
+    ): AuthResult
+    {
         val email = email.trim().lowercase()
 
-        if (userDao.getUserByEmail(email) != null) {
+        if (userDao.getUserByEmail(email) != null)
+        {
             return AuthResult.EmailAlreadyExists
         }
 
@@ -23,6 +27,7 @@ class AuthRepository(
                 email = email,
                 passwordHash = hashed.hash,
                 passwordSalt = hashed.salt,
+                selectedGenreIds = selectedGenreIds.toList(),
             )
         )
 
@@ -37,7 +42,7 @@ class AuthRepository(
         val user = userDao.getUserByEmail(email) ?:
         return AuthResult.InvalidCredentials
 
-        if (!passwHash.verify(password = password, savedHash = user.passwordHash,
+        if (!passwHash.verifyPassword(password = password, savedHash = user.passwordHash,
                 savedSalt = user.passwordSalt,
             )
         ) {

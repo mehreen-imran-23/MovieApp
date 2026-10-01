@@ -54,15 +54,16 @@ fun AuthTextField(
 
         isError = errorMsg != null,
 
-        supportingText = {
-            if (errorMsg != null) {
+        supportingText = if (errorMsg != null) {
+            {
                 Text(
                     text = errorMsg,
-                    style = TextStyles.Terms
+                    style = TextStyles.Terms,
                 )
-            } else {
-                null
             }
+        }
+        else {
+            null
         },
 
         trailingIcon = trailingIcon,

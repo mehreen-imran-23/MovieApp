@@ -28,6 +28,7 @@ import org.koin.core.parameter.parametersOf
 fun OnboardingNavHost(
     versionName: String,
     onOpenSignIn: () -> Unit,
+    onOpenHome: () -> Unit,
 ) {
     val nav = rememberNavController()
 
@@ -40,19 +41,25 @@ fun OnboardingNavHost(
         popExitTransition = { ExitTransition.None },
     ) {
         composable(Destinations.Splash.route) { entry ->
-            val splashViewModel: SplashViewModel = viewModel()
+            val splashViewModel: SplashViewModel = koinViewModel()
 
-            LaunchedEffect(splashViewModel, entry, nav) {
+            LaunchedEffect(
+                splashViewModel,
+                entry,
+                nav,
+                onOpenSignIn,
+                onOpenHome,
+            ) {
                 entry.lifecycle.repeatOnLifecycle(
                     Lifecycle.State.RESUMED,
                 ) {
                     splashViewModel.event.collect { event ->
-                        when (event) {
-                            SplashEvent.Navigate -> {
-                                if (
-                                    nav.currentDestination?.route ==
-                                    Destinations.Splash.route
-                                ) {
+                        if (
+                            nav.currentDestination?.route ==
+                            Destinations.Splash.route
+                        ) {
+                            when (event) {
+                                SplashEvent.Navigate -> {
                                     nav.navigate(
                                         Destinations.OnboardingPosters.route
                                     ) {
@@ -62,6 +69,14 @@ fun OnboardingNavHost(
 
                                         launchSingleTop = true
                                     }
+                                }
+
+                                SplashEvent.NavigateToSignIn -> {
+                                    onOpenSignIn()
+                                }
+
+                                SplashEvent.NavigateToHome -> {
+                                    onOpenHome()
                                 }
                             }
                         }
@@ -106,6 +121,7 @@ fun OnboardingNavHost(
 @Composable
 fun AuthNavHost(
     onOpenHome: () -> Unit,
+    onOpenProfile: () -> Unit,
 ) {
     val nav = rememberNavController()
 
@@ -131,6 +147,7 @@ fun AuthNavHost(
                     entry,
                     nav,
                     onOpenHome,
+                    onOpenHome
                 ) {
                     entry.lifecycle.repeatOnLifecycle(
                         Lifecycle.State.RESUMED,
@@ -162,6 +179,9 @@ fun AuthNavHost(
 
                                 AuthEvent.NavigateToHome -> {
                                     onOpenHome()
+                                }
+                                AuthEvent.NavigateToProfile -> {
+                                    onOpenProfile()
                                 }
 
                                 else -> Unit

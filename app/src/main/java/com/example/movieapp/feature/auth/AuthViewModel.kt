@@ -1,5 +1,6 @@
 package com.example.movieapp.feature.auth
 
+import androidx.compose.remote.creation.dsl.first
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.R
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -28,10 +30,15 @@ class AuthViewModel(
     val events: SharedFlow<AuthEvent> = _events.asSharedFlow()
     private val emailRegex = Regex("""^[A-Za-z0-9]+(?:[._%+-][A-Za-z0-9]+)*@[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*(?:\.[A-Za-z]{2,})+$""")
     private val passwordRegex = Regex("""^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9\s]).{8,}$""")
-    fun onIntent(intent: AuthIntent) {
-        if (_uiState.value.button.isLoading) return
+    fun onIntent(intent: AuthIntent)
+    {
+        if (_uiState.value.button.isLoading)
+        {
+            return
+        }
 
-        when (intent) {
+        when (intent)
+        {
             is AuthIntent.EmailChanged -> {
                 _uiState.update { state ->
                     state.copy(
@@ -68,11 +75,15 @@ class AuthViewModel(
             AuthIntent.ForgotPassClicked ->
                 sendEvent(AuthEvent.NavigateToForgotPass)
 
-            AuthIntent.SignUpClicked ->
+            AuthIntent.SignUpClicked -> {
+                clearForm()
                 sendEvent(AuthEvent.NavigateToSignUp)
+            }
 
-            AuthIntent.SignInClicked ->
+            AuthIntent.SignInClicked -> {
+                clearForm()
                 sendEvent(AuthEvent.NavigateToSignIn)
+            }
 
             AuthIntent.SkipClicked ->
                 continueAsGuest()
@@ -89,12 +100,17 @@ class AuthViewModel(
     }
 
     private fun validateAndSignIn() {
-        if (!validateInput()) return
+        if (!validateInput()) {
+            return
+        }
         authenticate()
     }
 
     private fun validateAndSignUp() {
-        if (!validateInput()) return
+        if (!validateInput())
+        {
+            return
+        }
         authenticate()
     }
 
@@ -116,31 +132,31 @@ class AuthViewModel(
                     AuthEnum.SignIn -> repository.signIn(
                         email = email,
                         password = password,
-                    )
 
-                    AuthEnum.SignUp -> repository.signUp(
+                        )
+
+                        AuthEnum.SignUp -> repository.signUp(
                         email = email,
                         password = password,
+                        selectedGenreIds = preferences.selectedGenreIds.first(),
                     )
                 }
 
                 when (result)
                 {
                     is AuthResult.Success -> {
-                        if (mode == AuthEnum.SignIn)
-                        {
-                            preferences.saveLogin(result.userId)
-                        }
+                            preferences.saveUserSession(result.userId)
 
                         _uiState.update { state ->
                             state.copy(
+                                email = InputFieldState(),
                                 password = InputFieldState(),
                                 successMsg = when (mode)
                                 {
                                     AuthEnum.SignIn ->
-                                        R.string.signinSuccess
+                                        R.string.signin_success
                                     AuthEnum.SignUp ->
-                                        R.string.signupSuccess
+                                        R.string.signup_success
                                 },
                             )
                         }
@@ -151,7 +167,11 @@ class AuthViewModel(
                                 AuthEvent.NavigateToHome
 
                             AuthEnum.SignUp ->
-                                AuthEvent.NavigateToSignIn
+                                AuthEvent.NavigateToProfile
+                        }
+
+                        if (mode == AuthEnum.SignUp) {
+                            clearForm()
                         }
 
                         _events.emit(event)
@@ -160,7 +180,7 @@ class AuthViewModel(
                     AuthResult.EmailAlreadyExists -> {
                         _uiState.update { state ->
                             state.copy(
-                                AuthError = R.string.emailAlreadyExists,
+                                AuthError = R.string.email_already_exists,
                             )
                         }
                     }
@@ -168,7 +188,7 @@ class AuthViewModel(
                     AuthResult.InvalidCredentials -> {
                         _uiState.update { state ->
                             state.copy(
-                                AuthError = R.string.invaldiCredentials,
+                                AuthError = R.string.invaldi_credentials,
                             )
                         }
                     }
@@ -182,7 +202,7 @@ class AuthViewModel(
             {
                 _uiState.update { state ->
                     state.copy(
-                        AuthError = R.string.authFailed,
+                        AuthError = R.string.auth_failed,
                     )
                 }
             }
@@ -219,7 +239,7 @@ class AuthViewModel(
             {
                 _uiState.update { state ->
                     state.copy(
-                        AuthError = R.string.authFailed,
+                        AuthError = R.string.auth_failed,
                     )
                 }
             }
@@ -241,21 +261,21 @@ class AuthViewModel(
 
         val emailError = when
         {
-            email.isEmpty() -> R.string.EmailReq
-            !emailRegex.matches(email) -> R.string.InvalidEmail
+            email.isEmpty() -> R.string.email_req
+            !emailRegex.matches(email) -> R.string.invalid_email
             else -> null
         }
 
         val passError = when
         {
-            password.isEmpty() -> R.string.PassReq
+            password.isEmpty() -> R.string.pass_req
 
             mode == AuthEnum.SignIn && password.length < 8 ->
-                R.string.InvalidPassword
+                R.string.invalid_password
 
             mode == AuthEnum.SignUp &&
                     !passwordRegex.matches(password) ->
-                R.string.ValidPass
+                R.string.valid_pass
 
             else -> null
         }
@@ -281,5 +301,9 @@ class AuthViewModel(
         viewModelScope.launch {
             _events.emit(event)
         }
+    }
+
+    private fun clearForm() {
+        _uiState.value = AuthUiState()
     }
 }

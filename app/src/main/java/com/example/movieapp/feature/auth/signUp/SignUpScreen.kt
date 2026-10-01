@@ -93,7 +93,7 @@ private fun SignUpContent(
     }
 
     AuthLayout(
-        title = stringResource(R.string.signupTitle),
+        title = stringResource(R.string.signup_title),
         onSkipClick = {
             if (!state.button.isLoading) {
                 focusManager.clearFocus()
@@ -119,7 +119,7 @@ private fun SignUpContent(
                 onValueChange = {
                     onIntent(AuthIntent.EmailChanged(it))
                 },
-                placeholder = stringResource(R.string.emailPlace),
+                placeholder = stringResource(R.string.email_place),
                 enabled = !state.button.isLoading,
                 errorMsg = state.email.errorMsg?.let { errorId ->
                     stringResource(errorId)
@@ -142,7 +142,7 @@ private fun SignUpContent(
                 onValueChange = {
                     onIntent(AuthIntent.PasswordChanged(it))
                 },
-                placeholder = stringResource(R.string.passPlace),
+                placeholder = stringResource(R.string.pass_place),
                 enabled = !state.button.isLoading,
                 errorMsg = state.password.errorMsg?.let { errorId ->
                     stringResource(errorId)
@@ -176,9 +176,9 @@ private fun SignUpContent(
                             },
                             contentDescription = stringResource(
                                 if (passVisible) {
-                                    R.string.hidePass
+                                    R.string.hide_pass
                                 } else {
-                                    R.string.showPass
+                                    R.string.show_pass
                                 }
                             ),
                             tint = PasswordToggle,
@@ -203,11 +203,11 @@ private fun SignUpContent(
                 text = stringResource(
                     if (state.button.isLoading)
                     {
-                        R.string.signingUp
+                        R.string.signing_up
                     }
                     else
                     {
-                        R.string.signupBtn
+                        R.string.signup_btn
                     }
                 ),
                 onClick = signup,
@@ -217,8 +217,8 @@ private fun SignUpContent(
 
             Spacer(Modifier.height(12.dp))
 
-            val terms = stringResource(R.string.signupTerms)
-            val privacyPolicy = stringResource(R.string.privacyPolicy)
+            val terms = stringResource(R.string.signup_terms)
+            val privacyPolicy = stringResource(R.string.privacy_policy)
 
             Text(
                 text = buildAnnotatedString {
@@ -272,13 +272,13 @@ private fun SignInFooter(
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Text(
-            text = stringResource(R.string.accountAlready),
+            text = stringResource(R.string.account_already),
             style = TextStyles.AuthBody,
             color = TextMuted,
         )
 
         Text(
-            text = stringResource(R.string.signInTitle),
+            text = stringResource(R.string.sign_in_title),
             style = TextStyles.AuthBody,
             color = MovieWhite,
             modifier = Modifier.clickable(

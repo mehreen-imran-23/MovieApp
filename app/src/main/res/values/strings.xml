@@ -1,81 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <resources>
+
     <string name="app_name">Movie App</string>
-<string name="version">Version %1$s</string>
-<string name="onboarding1">Tell us about your\nfavorite movie genres</string>
-<string name="genresSelect">Select the genres you\nlike to watch</string>
-<string name="Next">Next</string>
-<string name="Skip">Skip</string>
-<string name="signInTitle">Sign In</string>
-<string name="signInButton">Sign in</string>
-<string name="emailPlace">E-mail</string>
-<string name="passPlace">Password</string>
-<string name="forgotPass">Forgot password?</string>
-<string name="or">or</string>
-    <string name="haveAccount">Don’t you have an account?</string>
+    <string name="version">Version %1$s</string>
 
+    <string name="onboarding1">Tell us about your\nfavorite movie genres</string>
+    <string name="genres_select">Select the genres you\nlike to watch</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
 
-<string name="signupTitle">Sign Up</string>
-<string name="signupBtn">Sign up</string>
-    <string name="signupTerms">By clicking the “sign up” button, you accept the terms of the</string>
-    <string name="privacyPolicy">Privacy Policy</string>
-    <string name="accountAlready">Already have an account?</string>
+    <string name="sign_in_title">Sign In</string>
+    <string name="sign_in_button">Sign in</string>
+    <string name="email_place">E-mail</string>
+    <string name="pass_place">Password</string>
+    <string name="forgot_pass">Forgot password?</string>
+    <string name="or">or</string>
+    <string name="have_account">Don’t you have an account?</string>
 
-<string name="signupSuccess">Sign up successfully!</string>
-<string name="MoreInfo">Tell us more about you</string>
-<string name="name">Your name</string>
-<string name="phoneNumber">Your phone number</string>
-<string name="city_pincode">Current City/pincode</string>
-<string name="continueBtn">Continue</string>
-<string name="homeGreeting">Hey, %1$s</string>
-<string name="Trending">TRENDING</string>
-<string name="recommendedMovies">Recommended Movies</string>
-<string name="seeAll">See all</string>
-<string name="Book">Book</string>
-<string name="watchTrailer">Watch Trailer</string>
-<string name="navMovies">Movies</string>
+    <string name="signup_title">Sign Up</string>
+    <string name="signup_btn">Sign up</string>
+    <string name="signup_terms">By clicking the “sign up” button, you accept the terms of the</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="account_already">Already have an account?</string>
 
-<string name="searchMovies">Search any movies name here</string>
-<string name="searchRecent">Recent search</string>
-<string name="searchRes">Search Results</string>
+    <string name="signup_success">Sign up successfully!</string>
+    <string name="more_info">Tell us more about you</string>
+    <string name="name">Your name</string>
+    <string name="phone_number">Your phone number</string>
+    <string name="city_pincode">Current City/pincode</string>
+    <string name="continue_btn">Continue</string>
 
-<string name="rating">Censor Rating</string>
-<string name="duration">Duration</string>
-<string name="releaseDate">Release date</string>
-<string name="languages">Available in languages</string>
-<string name="plot">Story Plot</string>
-<string name="cast">Cast</string>
-<string name="bookTickets">Book Tickets</string>
-<string name="back">Go back</string>
-<string name="search">Search movies</string>
-<string name="openProfile">Open profile</string>
-<string name="filter">Filter movies</string>
-<string name="moreOptions">More options</string>
-<string name="showPass">Show password</string>
-<string name="hidePass">Hide password</string>
-<string name="facebook">Continue with Facebook</string>
-<string name="google">Continue with Google</string>
-<string name="apple">Continue with Apple</string>
-<string name="movieTrailer">Watch trailer for %1$s</string>
+    <string name="home_greeting">Hey, %1$s</string>
+    <string name="trending">TRENDING</string>
+    <string name="recommended_movies">Recommended Movies</string>
+    <string name="see_all">See all</string>
+    <string name="book">Book</string>
+    <string name="watch_trailer">Watch Trailer</string>
+    <string name="nav_movies">Movies</string>
 
-    <string name="Postershimmer">Poster shimmer</string>
-    <string name="GenreShimmer"> Genre shimmer</string>
-    <string name="EmailReq">Please enter your email address.</string>
+    <string name="search_movies">Search any movies name here</string>
+    <string name="search_recent">Recent search</string>
+    <string name="search_res">Search Results</string>
 
-    <string name="InvalidEmail">Please enter a valid email address.</string>
-    <string name="PassReq">Please enter your password.</string>
-    <string name="signingIn">Signing in…</string>
-    <string name="invaldiCredentials">Incorrect email or password.</string>
-    <string name="NetworkError">Unable to connect. Please check your internet connection.</string>
-    <string name="GenError">Unable to sign in. Please try again.</string>
-    <string name="Retry">Could not save your selection. Please try again.</string>
-    <string name="ValidPass">Password must contain at least 8 characters, 1 uppercase letter, 1 number, and 1 special character.</string>
-    <string name="signingUp">Signing up…</string>
+    <string name="rating">Censor Rating</string>
+    <string name="duration">Duration</string>
+    <string name="release_date">Release date</string>
+    <string name="languages">Available in languages</string>
+    <string name="plot">Story Plot</string>
+    <string name="cast">Cast</string>
+    <string name="book_tickets">Book Tickets</string>
+
+    <string name="back">Go back</string>
+    <string name="search">Search movies</string>
+    <string name="open_profile">Open profile</string>
+    <string name="filter">Filter movies</string>
+    <string name="more_options">More options</string>
+    <string name="show_pass">Show password</string>
+    <string name="hide_pass">Hide password</string>
+
+    <string name="facebook">Continue with Facebook</string>
+    <string name="google">Continue with Google</string>
+    <string name="apple">Continue with Apple</string>
+    <string name="movie_trailer">Watch trailer for %1$s</string>
+
+    <string name="poster_shimmer">Poster shimmer</string>
+    <string name="genre_shimmer">Genre shimmer</string>
+
+    <string name="email_req">Please enter your email address.</string>
+    <string name="invalid_email">Please enter a valid email address.</string>
+    <string name="pass_req">Please enter your password.</string>
+    <string name="signing_in">Signing in…</string>
+    <string name="invaldi_credentials">Incorrect email or password.</string>
+    <string name="network_error">Unable to connect. Please check your internet connection.</string>
+    <string name="gen_error">Unable to sign in. Please try again.</string>
+    <string name="retry">Could not save your selection. Please try again.</string>
+    <string name="valid_pass">Password must contain at least 8 characters, 1 uppercase letter, 1 number, and 1 special character.</string>
+    <string name="signing_up">Signing up…</string>
     <string name="signin_signup_link">Sign Up</string>
-    <string name="InvalidPassword">Invalid password.</string>
-    <string name="signinSuccess">Signed in successfully!</string>
-    <string name="emailAlreadyExists">An account with this email already exists. Please sign in.</string>
-    <string name="authFailed">Something went wrong. Please try again.</string>
-    </resources>
+    <string name="invalid_password">Invalid password.</string>
+    <string name="signin_success">Signed in successfully!</string>
+    <string name="email_already_exists">An account with this email already exists. Please sign in.</string>
+    <string name="auth_failed">Something went wrong. Please try again.</string>
+
+    <string name="home_placeholder">Home sbr</string>
+
+    <string name="name_required">Please enter your name.</string>
+    <string name="phone_num">Please enter your phone number.</string>
+    <string name="profile_city">Please enter your city or pincode.</string>
+    <string name="session_missing">Please sign in again to save your profile.</string>
+    <string name="save_failed">Could not save your profile. Please try again.</string>
+    <string name="profile_saving">Saving…</string>
+
+</resources>

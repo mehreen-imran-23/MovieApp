@@ -15,7 +15,7 @@ class PassHash {
             val salt = ByteArray(16)
             SecureRandom().nextBytes(salt)
 
-            val hash = genHash(password, salt)
+            val hash = generateHash(password, salt)
 
             HashedPass(
                 hash = Base64.encodeToString(hash, Base64.NO_WRAP),
@@ -23,19 +23,14 @@ class PassHash {
             )
         }
 
-    suspend fun verify(
-        password: String,
-        savedHash: String,
-        savedSalt: String,
-    ): Boolean = withContext(Dispatchers.Default) {
+    suspend fun verifyPassword(password: String, savedHash: String, savedSalt: String,): Boolean = withContext(Dispatchers.Default) {
         val salt = Base64.decode(savedSalt, Base64.NO_WRAP)
         val expectedHash = Base64.decode(savedHash, Base64.NO_WRAP)
-        val actualHash = genHash(password, salt)
-
+        val actualHash = generateHash(password, salt)
         MessageDigest.isEqual(expectedHash, actualHash)
     }
 
-    private fun genHash(password: String, salt: ByteArray,): ByteArray
+    private fun generateHash(password: String, salt: ByteArray,): ByteArray
     {
         val param = Argon2Parameters.Builder(
             Argon2Parameters.ARGON2_id,

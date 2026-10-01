@@ -4,84 +4,70 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
-import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-private val Context.localDataStore by preferencesDataStore(
-    name = "genrePreferences"
+private val Context.sessionDataStore by preferencesDataStore(
+    name = "genrePreferences",
 )
 
 class LocalPreferences(
-    context: Context
+    context: Context,
+    private val database: AppDatabase,
 ) {
-    private val dataStore = context.applicationContext.localDataStore
-    private val selectedGenresKey = stringSetPreferencesKey("selectedGenreIds")
+    private val dataStore = context.applicationContext.sessionDataStore
+    private val userDao = database.userDao()
     private val userIdKey = longPreferencesKey("userId")
     private val guestKey = booleanPreferencesKey("isGuest")
+    private val onboardingKey =
+        booleanPreferencesKey("onboardingCompleted")
 
     val selectedGenreIds: Flow<Set<Int>> =
-        dataStore.data.map { preferences ->
-            val savedGenres = preferences[selectedGenresKey]
-            if (savedGenres != null)
-            {
-                savedGenres.mapNotNull { genreId ->
-                    genreId.toIntOrNull()
-                }.toSet()
-            }
-            else
-            {
-                emptySet()
-            }
+        userDao.observePreferences().map { preferences ->
+            preferences?.selectedGenreIds.orEmpty().toSet()
         }
 
-    val session: Flow<UserSession> =
+    val activeUserId: Flow<Long?> =
         dataStore.data.map { preferences ->
-
-            val userId = preferences[userIdKey]
-            val isGuest = preferences[guestKey]
-
-            if (userId != null) {
-                UserSession.LoggedIn(userId)
-            }
-            else if (isGuest == true)
-            {
-                UserSession.Guest
-            }
-            else
-            {
-                UserSession.SignedOut
-            }
+            preferences[userIdKey]
         }
 
+    val isGuest: Flow<Boolean> =
+        dataStore.data.map { preferences ->
+            preferences[guestKey] ?: false
+        }
+
+    val onboardingCompleted: Flow<Boolean> =
+        dataStore.data.map { preferences ->
+            preferences[onboardingKey] ?: false
+        }
 
     suspend fun saveSelectedGenres(ids: Set<Int>) {
-
-        val genreIdsAsStrings = ids.map { genreId ->
-            genreId.toString()
-        }.toSet()
+        userDao.savePreferences(
+            AppPreferencesEntity(
+                selectedGenreIds = ids.toList(),
+            )
+        )
 
         dataStore.edit { preferences ->
-            preferences[selectedGenresKey] = genreIdsAsStrings
+            preferences[onboardingKey] = true
         }
     }
 
-
-    suspend fun saveLogin(userId: Long) {
-
+    suspend fun saveUserSession(userId: Long) {
         dataStore.edit { preferences ->
             preferences[userIdKey] = userId
             preferences.remove(guestKey)
+            preferences[onboardingKey] = true
         }
     }
 
-
     suspend fun saveGuest() {
-
         dataStore.edit { preferences ->
             preferences.remove(userIdKey)
             preferences[guestKey] = true
+            preferences[onboardingKey] = true
         }
     }
 }

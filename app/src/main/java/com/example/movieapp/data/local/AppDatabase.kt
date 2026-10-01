@@ -1,14 +1,19 @@
 package com.example.movieapp.data.local
 
+import androidx.room3.ColumnTypeConverters
 import androidx.room3.Database
 import androidx.room3.RoomDatabase
 
 @Database(
-    entities = [UserEntity::class],
-    version = 1,
+    entities = [
+        UserEntity::class,
+        AppPreferencesEntity::class,
+    ],
+    version = 4,
     exportSchema = true,
 )
-abstract class AppDatabase : RoomDatabase()
-{
+@ColumnTypeConverters(GenreIdsConverter::class)
+abstract class AppDatabase : RoomDatabase() {
+
     abstract fun userDao(): UserDao
 }

@@ -35,6 +35,14 @@
             android:name=".feature.auth.AuthActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".feature.Activitiy.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".feature.afterSucessProfile.ProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MovieApp.Profile"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
 
