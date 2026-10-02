@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <style name="Theme.MovieApp.Profile"
+        parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/red_prime</item>
+        <item name="colorOnPrimary">@color/movie_white</item>
+        <item name="colorSurface">@color/movie_bg</item>
+        <item name="colorOnSurface">@color/movie_white</item>
+        <item name="android:colorBackground">@color/movie_bg</item>
+        <item name="android:windowBackground">@color/movie_bg</item>
+        <item name="android:fontFamily">@font/poppinsregular</item>
+    </style>
     <style name="Theme.MovieApp" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>
