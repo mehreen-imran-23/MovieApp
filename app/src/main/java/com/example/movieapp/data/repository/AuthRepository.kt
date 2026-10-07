@@ -1,22 +1,20 @@
 package com.example.movieapp.data.repository
 
-import com.example.movieapp.data.local.UserEntity
-import  com.example.movieapp.data.local.UserDao
 import com.example.movieapp.data.local.PassHash
+import com.example.movieapp.data.local.UserEntity
+import com.example.movieapp.data.local.model.UserDao
 
 class AuthRepository(
     private val userDao: UserDao,
     private val passwHash: PassHash,
 ) {
 
-    suspend fun signUp(email: String, password: String,
-        selectedGenreIds: Set<Int>,
-    ): AuthResult
-    {
+    suspend fun signUp(
+        email: String, password: String, selectedGenreIds: Set<Int>,
+    ): AuthResult {
         val email = email.trim().lowercase()
 
-        if (userDao.getUserByEmail(email) != null)
-        {
+        if (userDao.getUserByEmail(email) != null) {
             return AuthResult.EmailAlreadyExists
         }
 
@@ -37,19 +35,20 @@ class AuthRepository(
         )
     }
 
-    suspend fun signIn(email: String, password: String,): AuthResult {
+    suspend fun signIn(email: String, password: String): AuthResult {
         val email = email.trim().lowercase()
-        val user = userDao.getUserByEmail(email) ?:
-        return AuthResult.InvalidCredentials
+        val user = userDao.getUserByEmail(email) ?: return AuthResult.InvalidCredentials
 
-        if (!passwHash.verifyPassword(password = password, savedHash = user.passwordHash,
+        if (!passwHash.verifyPassword(
+                password = password, savedHash = user.passwordHash,
                 savedSalt = user.passwordSalt,
             )
         ) {
             return AuthResult.InvalidCredentials
         }
 
-        return AuthResult.Success(userId = user.id, email = user.email,
+        return AuthResult.Success(
+            userId = user.id, email = user.email,
         )
     }
 }

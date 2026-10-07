@@ -1,4 +1,5 @@
 package com.example.movieapp.data.repository
+
 import com.example.movieapp.data.model.GenreDto
 import com.example.movieapp.data.remote.Api
 import java.io.IOException
@@ -28,25 +29,19 @@ class OnboardingRepository(
     }
 
     suspend fun getGenres(): List<GenreDto> {
-        val genres = api.getMovieGenres()
-            .genres
-            .orEmpty()
-            .mapNotNull { genre ->
-                val id = genre.id
-                val name = genre.name
+        val genres = api.getMovieGenres().genres.orEmpty().mapNotNull { genre ->
+            val id = genre.id
+            val name = genre.name
 
-                if (id != null && !name.isNullOrBlank()) {
-                    GenreDto(id = id, name = name)
-                }
-                else
-                {
-                    null
-                }
+            if (id != null && !name.isNullOrBlank()) {
+                GenreDto(id = id, name = name)
+            } else {
+                null
             }
+        }
             .distinctBy { it.id }
 
-        if (genres.isEmpty())
-        {
+        if (genres.isEmpty()) {
             throw IOException("No genres returned")
         }
         return genres

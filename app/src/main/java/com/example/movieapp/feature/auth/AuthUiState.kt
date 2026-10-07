@@ -1,4 +1,5 @@
 package com.example.movieapp.feature.auth
+
 import androidx.annotation.StringRes
 
 data class AuthUiState(

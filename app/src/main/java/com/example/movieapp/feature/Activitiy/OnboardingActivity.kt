@@ -27,15 +27,18 @@ class OnboardingActivity : ComponentActivity() {
                 OnboardingNavHost(
                     versionName = "1.0.1",
 
-                    onOpenSignIn = {
+                    onOpenSignIn = { closeOnboarding ->
                         startActivity(
                             Intent(
                                 this@OnboardingActivity,
                                 AuthActivity::class.java,
                             )
                         )
-                    },
 
+                        if (closeOnboarding) {
+                            finish()
+                        }
+                    },
                     onOpenHome = {
                         startActivity(
                             Intent(

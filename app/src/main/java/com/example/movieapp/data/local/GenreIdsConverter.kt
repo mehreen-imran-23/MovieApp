@@ -11,8 +11,7 @@ class GenreIdsConverter {
 
     @ColumnTypeConverter
     fun fromDatabase(value: String): List<Int> {
-        if (value.isBlank())
-        {
+        if (value.isBlank()) {
             return emptyList()
         }
 

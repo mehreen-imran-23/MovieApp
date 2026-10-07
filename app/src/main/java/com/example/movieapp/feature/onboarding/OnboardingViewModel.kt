@@ -1,5 +1,6 @@
 package com.example.movieapp.feature.onboarding
 
+import Onboarding1Event
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,8 +23,9 @@ class OnboardingViewModel(
     private val preferences: LocalPreferences,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(OnboardingState())
+    private val _uiState = MutableStateFlow(OnboardingState(isLoading = true))
     val uiState: StateFlow<OnboardingState> = _uiState.asStateFlow()
+
     private var isSavingGenres = false
 
     private val _events = MutableSharedFlow<Onboarding1Event>(
@@ -46,11 +48,15 @@ class OnboardingViewModel(
             }
 
             try {
-                val savedGenreIds = preferences.selectedGenreIds.first()
+                val savedGenreIds =
+                    preferences.selectedGenreIds.first()
 
                 _uiState.update { state ->
-                    state.copy(selectedGenre = savedGenreIds)
+                    state.copy(
+                        selectedGenre = savedGenreIds,
+                    )
                 }
+
                 val urls = repository.getPosterUrls()
                 val genres = repository.getGenres()
 
@@ -101,10 +107,13 @@ class OnboardingViewModel(
 
     fun onIntent(intent: OnboardingIntent) {
         when (intent) {
+
+            // Skip from ANY onboarding page -> Guest -> Home
             OnboardingIntent.Skip -> {
-                navigateToSignIn()
+                continueAsGuest()
             }
 
+            // Next/Continue -> existing Sign In flow
             OnboardingIntent.Next -> {
                 navigateToSignIn()
             }
@@ -121,12 +130,65 @@ class OnboardingViewModel(
             val selectedGenres = state.selectedGenre
 
             state.copy(
-                selectedGenre = if (genreId in selectedGenres) {
-                    selectedGenres - genreId
-                } else {
-                    selectedGenres + genreId
-                },
+                selectedGenre =
+                    if (genreId in selectedGenres) {
+                        selectedGenres - genreId
+                    } else {
+                        selectedGenres + genreId
+                    },
             )
+        }
+    }
+
+    private fun continueAsGuest() {
+        if (isSavingGenres) {
+            return
+        }
+
+        isSavingGenres = true
+
+        viewModelScope.launch {
+            try {
+                // If user selected genres before pressing Skip,
+                // keep those genres for the guest.
+                val selectedIds =
+                    if (_uiState.value.isLoading) {
+                        preferences.selectedGenreIds.first()
+                    } else {
+                        _uiState.value.selectedGenre
+                    }
+
+                preferences.saveSelectedGenres(selectedIds)
+
+                // Save guest session
+                preferences.saveGuest()
+
+                // Navigate directly to Home
+                _events.emit(
+                    Onboarding1Event.NavigateToHome
+                )
+
+            } catch (exception: CancellationException) {
+                throw exception
+
+            } catch (exception: Exception) {
+
+                Log.e(
+                    "OnboardingViewModel",
+                    "Could not continue as guest",
+                    exception,
+                )
+
+                _uiState.update { state ->
+                    state.copy(
+                        errorMsg =
+                            "Could not continue as guest. Please try again.",
+                    )
+                }
+
+            } finally {
+                isSavingGenres = false
+            }
         }
     }
 
@@ -134,6 +196,7 @@ class OnboardingViewModel(
         if (isSavingGenres) {
             return
         }
+
         isSavingGenres = true
 
         viewModelScope.launch {
@@ -141,21 +204,21 @@ class OnboardingViewModel(
                 val selectedIds =
                     if (_uiState.value.isLoading) {
                         preferences.selectedGenreIds.first()
-                    }
-                    else {
+                    } else {
                         _uiState.value.selectedGenre
                     }
 
                 preferences.saveSelectedGenres(selectedIds)
 
-                _events.emit(Onboarding1Event.NavigateToSignIn)
-            }
-            catch (exception: CancellationException)
-            {
+                _events.emit(
+                    Onboarding1Event.NavigateToSignIn
+                )
+
+            } catch (exception: CancellationException) {
                 throw exception
-            }
-            catch (exception: Exception)
-            {
+
+            } catch (exception: Exception) {
+
                 Log.e(
                     "OnboardingViewModel",
                     "Could not save selected genres",
@@ -164,11 +227,12 @@ class OnboardingViewModel(
 
                 _uiState.update { state ->
                     state.copy(
-                        errorMsg = "Could not save your selection. Please try again.",
+                        errorMsg =
+                            "Could not save your selection. Please try again.",
                     )
                 }
-            } finally
-            {
+
+            } finally {
                 isSavingGenres = false
             }
         }

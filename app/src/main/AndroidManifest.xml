@@ -39,7 +39,7 @@
             android:name=".feature.Activitiy.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".feature.afterSucessProfile.ProfileActivity"
+            android:name=".feature.Activitiy.ProfileActivity"
             android:exported="false"
             android:theme="@style/Theme.MovieApp.Profile"
             android:windowSoftInputMode="adjustResize" />

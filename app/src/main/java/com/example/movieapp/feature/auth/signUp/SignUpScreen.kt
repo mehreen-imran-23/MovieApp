@@ -201,12 +201,9 @@ private fun SignUpContent(
 
             MovieButton(
                 text = stringResource(
-                    if (state.button.isLoading)
-                    {
+                    if (state.button.isLoading) {
                         R.string.signing_up
-                    }
-                    else
-                    {
+                    } else {
                         R.string.signup_btn
                     }
                 ),

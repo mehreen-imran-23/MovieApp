@@ -1,6 +1,5 @@
 package com.example.movieapp.feature.auth
 
-import androidx.compose.remote.creation.dsl.first
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.R
@@ -28,17 +27,15 @@ class AuthViewModel(
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
     private val _events = MutableSharedFlow<AuthEvent>(replay = 0)
     val events: SharedFlow<AuthEvent> = _events.asSharedFlow()
-    private val emailRegex = Regex("""^[A-Za-z0-9]+(?:[._%+-][A-Za-z0-9]+)*@[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*(?:\.[A-Za-z]{2,})+$""")
+    private val emailRegex =
+        Regex("""^[A-Za-z0-9]+(?:[._%+-][A-Za-z0-9]+)*@[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*(?:\.[A-Za-z]{2,})+$""")
     private val passwordRegex = Regex("""^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9\s]).{8,}$""")
-    fun onIntent(intent: AuthIntent)
-    {
-        if (_uiState.value.button.isLoading)
-        {
+    fun onIntent(intent: AuthIntent) {
+        if (_uiState.value.button.isLoading) {
             return
         }
 
-        when (intent)
-        {
+        when (intent) {
             is AuthIntent.EmailChanged -> {
                 _uiState.update { state ->
                     state.copy(
@@ -107,8 +104,7 @@ class AuthViewModel(
     }
 
     private fun validateAndSignUp() {
-        if (!validateInput())
-        {
+        if (!validateInput()) {
             return
         }
         authenticate()
@@ -135,34 +131,32 @@ class AuthViewModel(
 
                         )
 
-                        AuthEnum.SignUp -> repository.signUp(
+                    AuthEnum.SignUp -> repository.signUp(
                         email = email,
                         password = password,
                         selectedGenreIds = preferences.selectedGenreIds.first(),
                     )
                 }
 
-                when (result)
-                {
+                when (result) {
                     is AuthResult.Success -> {
-                            preferences.saveUserSession(result.userId)
+                        preferences.saveUserSession(result.userId)
 
                         _uiState.update { state ->
                             state.copy(
                                 email = InputFieldState(),
                                 password = InputFieldState(),
-                                successMsg = when (mode)
-                                {
+                                successMsg = when (mode) {
                                     AuthEnum.SignIn ->
                                         R.string.signin_success
+
                                     AuthEnum.SignUp ->
                                         R.string.signup_success
                                 },
                             )
                         }
 
-                        val event = when (mode)
-                        {
+                        val event = when (mode) {
                             AuthEnum.SignIn ->
                                 AuthEvent.NavigateToHome
 
@@ -193,21 +187,15 @@ class AuthViewModel(
                         }
                     }
                 }
-            }
-            catch (exception: CancellationException)
-            {
+            } catch (exception: CancellationException) {
                 throw exception
-            }
-            catch (exception: Exception)
-            {
+            } catch (exception: Exception) {
                 _uiState.update { state ->
                     state.copy(
                         AuthError = R.string.auth_failed,
                     )
                 }
-            }
-            finally
-            {
+            } finally {
                 _uiState.update { state ->
                     state.copy(
                         button = state.button.copy(isLoading = false),
@@ -230,21 +218,15 @@ class AuthViewModel(
             try {
                 preferences.saveGuest()
                 _events.emit(AuthEvent.NavigateToHome)
-            }
-            catch (exception: CancellationException)
-            {
+            } catch (exception: CancellationException) {
                 throw exception
-            }
-            catch (exception: Exception)
-            {
+            } catch (exception: Exception) {
                 _uiState.update { state ->
                     state.copy(
                         AuthError = R.string.auth_failed,
                     )
                 }
-            }
-            finally
-            {
+            } finally {
                 _uiState.update { state ->
                     state.copy(
                         button = state.button.copy(isLoading = false),
@@ -259,15 +241,13 @@ class AuthViewModel(
         val email = state.email.input.trim()
         val password = state.password.input
 
-        val emailError = when
-        {
+        val emailError = when {
             email.isEmpty() -> R.string.email_req
             !emailRegex.matches(email) -> R.string.invalid_email
             else -> null
         }
 
-        val passError = when
-        {
+        val passError = when {
             password.isEmpty() -> R.string.pass_req
 
             mode == AuthEnum.SignIn && password.length < 8 ->

@@ -2,11 +2,9 @@ package com.example.movieapp.feature.afterSucessProfile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.util.copy
 import com.example.movieapp.R
 import com.example.movieapp.data.local.LocalPreferences
 import com.example.movieapp.data.repository.ProfileRepository
-import com.example.movieapp.feature.auth.InputFieldState
 import com.example.movieapp.feature.profile.ProfileEvent
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,24 +20,68 @@ class ProfileViewModel(
     private val preferences: LocalPreferences,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ProfileUiState())
+    private val _uiState = MutableStateFlow(ProfileState())
     val uiState = _uiState.asStateFlow()
 
-    private val _events = MutableSharedFlow<ProfileEvent>()
+    private val _events = MutableSharedFlow<ProfileEvent>(
+        replay = 0,
+    )
     val events = _events.asSharedFlow()
 
     fun onIntent(intent: ProfileIntent) {
+        if (_uiState.value.isLoading) {
+            return
+        }
+
         when (intent) {
-            is ProfileIntent.ContinueClicked -> saveProfile(intent)
+            is ProfileIntent.NameChanged -> {
+                _uiState.update { state ->
+                    state.copy(
+                        name = state.name.copy(
+                            input = intent.name,
+                            errorMsg = null,
+                        ),
+                        errorMsg = null,
+                    )
+                }
+            }
+
+            is ProfileIntent.PhoneNumber -> {
+                _uiState.update { state ->
+                    state.copy(
+                        phoneNumber = state.phoneNumber.copy(
+                            input = intent.phoneNumber,
+                            errorMsg = null,
+                        ),
+                        errorMsg = null,
+                    )
+                }
+            }
+
+            is ProfileIntent.City -> {
+                _uiState.update { state ->
+                    state.copy(
+                        city = state.city.copy(
+                            input = intent.city,
+                            errorMsg = null,
+                        ),
+                        errorMsg = null,
+                    )
+                }
+            }
+
+            ProfileIntent.ContinueClicked -> {
+                saveProfile()
+            }
         }
     }
 
-    private fun saveProfile(intent: ProfileIntent.ContinueClicked) {
-        if (_uiState.value.isLoading) return
+    private fun saveProfile() {
+        val state = _uiState.value
 
-        val name = intent.name.trim()
-        val phoneNumber = intent.phoneNumber.trim()
-        val city = intent.city.trim()
+        val name = state.name.input.trim()
+        val phoneNumber = state.phoneNumber.input.trim()
+        val city = state.city.input.trim()
 
         val nameError = if (name.isBlank()) {
             R.string.name_required
@@ -55,35 +97,33 @@ class ProfileViewModel(
 
         val cityError = if (city.isBlank()) {
             R.string.profile_city
-        }
-        else {
+        } else {
             null
         }
 
-        _uiState.update { state ->
-            state.copy(
-                name = InputFieldState(
+        val isValid = nameError == null && phoneError == null && cityError == null
+
+        _uiState.update { current ->
+            current.copy(
+                name = current.name.copy(
                     input = name,
                     errorMsg = nameError,
                 ),
-                phoneNumber = InputFieldState(
+                phoneNumber = current.phoneNumber.copy(
                     input = phoneNumber,
                     errorMsg = phoneError,
                 ),
-                city = InputFieldState(
+                city = current.city.copy(
                     input = city,
                     errorMsg = cityError,
                 ),
+                isLoading = isValid,
                 errorMsg = null,
             )
         }
 
-        if (nameError != null || phoneError != null || cityError != null) {
+        if (!isValid) {
             return
-        }
-
-        _uiState.update { state ->
-            state.copy(isLoading = true)
         }
 
         viewModelScope.launch {
@@ -91,10 +131,12 @@ class ProfileViewModel(
                 val userId = preferences.activeUserId.first()
 
                 if (userId == null) {
-                    _uiState.update { state ->
-                        state.copy(errorMsg = R.string.session_missing)
+                    _uiState.update { current ->
+                        current.copy(
+                            errorMsg = R.string.session_missing,
+                        )
                     }
-                    return@launch
+                    return@launch //dont call repo, stop
                 }
 
                 val saved = repository.saveProfile(
@@ -107,19 +149,23 @@ class ProfileViewModel(
                 if (saved) {
                     _events.emit(ProfileEvent.NavigateToHome)
                 } else {
-                    _uiState.update { state ->
-                        state.copy(errorMsg = R.string.save_failed)
+                    _uiState.update { current ->
+                        current.copy(
+                            errorMsg = R.string.save_failed,
+                        )
                     }
                 }
             } catch (exception: CancellationException) {
                 throw exception
             } catch (exception: Exception) {
-                _uiState.update { state ->
-                    state.copy(errorMsg = R.string.save_failed)
+                _uiState.update { current ->
+                    current.copy(
+                        errorMsg = R.string.save_failed,
+                    )
                 }
             } finally {
-                _uiState.update { state ->
-                    state.copy(isLoading = false)
+                _uiState.update { current ->
+                    current.copy(isLoading = false)
                 }
             }
         }

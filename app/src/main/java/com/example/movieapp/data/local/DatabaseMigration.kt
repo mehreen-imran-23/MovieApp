@@ -33,3 +33,38 @@ val migration_3_4 = object : Migration(3, 4) {
         )
     }
 }
+
+val migration_4_5 = object : Migration(4, 5) {
+
+    override suspend fun migrate(connection: SQLiteConnection) {
+        connection.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS recent_searches (
+                searchId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                userId INTEGER,
+                query TEXT NOT NULL,
+                searchedAt INTEGER NOT NULL
+            )
+            """.trimIndent()
+        )
+    }
+}
+
+val migration_5_6 = object : Migration(5, 6) {
+
+    override suspend fun migrate(connection: SQLiteConnection) {
+        connection.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS recent_movies (
+                ownerKey TEXT NOT NULL,
+                movieId INTEGER NOT NULL,
+                title TEXT NOT NULL,
+                posterUrl TEXT,
+                language TEXT NOT NULL,
+                searchedAt INTEGER NOT NULL,
+                PRIMARY KEY(ownerKey, movieId)
+            )
+            """.trimIndent()
+        )
+    }
+}

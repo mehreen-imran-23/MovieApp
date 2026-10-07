@@ -15,6 +15,7 @@ ksp = "2.3.6"
 remoteCreationCore = "1.0.0-alpha20"
 materialViews = "1.13.0"
 roomKtx = "2.8.5"
+runtimeSaveable = "1.12.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,6 +38,7 @@ androidx-room3-runtime = { group = "androidx.room3", name = "room3-runtime", ver
 material-views = { module = "com.google.android.material:material", version.ref = "materialViews" }
 androidx-compose-remote-creation-core = { group = "androidx.compose.remote", name = "remote-creation-core", version.ref = "remoteCreationCore" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+androidx-compose-runtime-saveable = { group = "androidx.compose.runtime", name = "runtime-saveable", version.ref = "runtimeSaveable" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

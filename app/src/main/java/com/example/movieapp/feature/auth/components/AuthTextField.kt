@@ -61,8 +61,7 @@ fun AuthTextField(
                     style = TextStyles.Terms,
                 )
             }
-        }
-        else {
+        } else {
             null
         },
 

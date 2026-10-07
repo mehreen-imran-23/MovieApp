@@ -47,7 +47,7 @@ private val screenPadding = 26.dp
 private val contentWidth = 340.dp
 private val genreWidth = 342.dp
 private const val placeholderCount = 8
-private const val PageScroll = 300
+private const val pagescroll = 300
 
 private enum class OnboardingStep {
     Poster,
@@ -63,9 +63,7 @@ fun OnboardingScreen(
 
     OnboardingContent(
         state = state,
-        onIntent = { intent ->
-            viewModel.onIntent(intent)
-        },
+        onIntent = { intent -> viewModel.onIntent(intent) },
         modifier = modifier,
     )
 }
@@ -123,7 +121,7 @@ private fun OnboardingContent(
                         scope.launch {
                             pageState.animateScrollToPage(
                                 page = OnboardingStep.Genre.ordinal,
-                                animationSpec = tween(PageScroll),
+                                animationSpec = tween(pagescroll),
                             )
                         }
                     } else {

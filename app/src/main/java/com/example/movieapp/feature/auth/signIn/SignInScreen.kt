@@ -37,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movieapp.R
 import com.example.movieapp.feature.auth.AuthEnum
 import com.example.movieapp.feature.auth.AuthIntent
+import com.example.movieapp.feature.auth.AuthUiState
 import com.example.movieapp.feature.auth.AuthViewModel
 import com.example.movieapp.ui.components.AuthLayout
 import com.example.movieapp.ui.components.AuthTextField
@@ -44,13 +45,11 @@ import com.example.movieapp.ui.components.MovieButton
 import com.example.movieapp.ui.components.SocialSignInRow
 import com.example.movieapp.ui.theme.MovieWhite
 import com.example.movieapp.ui.theme.PasswordToggle
-import com.example.movieapp.ui.theme.RedPrime
 import com.example.movieapp.ui.theme.Text2
 import com.example.movieapp.ui.theme.TextMuted
 import com.example.movieapp.ui.theme.TextStyles
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import com.example.movieapp.feature.auth.AuthUiState
 
 
 @Composable
@@ -159,8 +158,7 @@ private fun SignInContent(
                 ),
                 visualTransformation = if (passVisible) {
                     VisualTransformation.None
-                }
-                else {
+                } else {
                     PasswordVisualTransformation()
                 },
                 trailingIcon = {
@@ -211,8 +209,7 @@ private fun SignInContent(
                 text = stringResource(
                     if (state.button.isLoading) {
                         R.string.signing_in
-                    }
-                    else {
+                    } else {
                         R.string.sign_in_button
                     }
                 ),
@@ -243,6 +240,7 @@ private fun SignInContent(
         }
     }
 }
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SignUpFooter(

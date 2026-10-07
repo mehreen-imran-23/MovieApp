@@ -3,7 +3,6 @@
 
     <string name="app_name">Movie App</string>
     <string name="version">Version %1$s</string>
-
     <string name="onboarding1">Tell us about your\nfavorite movie genres</string>
     <string name="genres_select">Select the genres you\nlike to watch</string>
     <string name="next">Next</string>
@@ -81,14 +80,25 @@
     <string name="signin_success">Signed in successfully!</string>
     <string name="email_already_exists">An account with this email already exists. Please sign in.</string>
     <string name="auth_failed">Something went wrong. Please try again.</string>
-
-    <string name="home_placeholder">Home sbr</string>
-
     <string name="name_required">Please enter your name.</string>
     <string name="phone_num">Please enter your phone number.</string>
     <string name="profile_city">Please enter your city or pincode.</string>
     <string name="session_missing">Please sign in again to save your profile.</string>
     <string name="save_failed">Could not save your profile. Please try again.</string>
     <string name="profile_saving">Saving…</string>
+    <string name="guest_greeting">Hey, Guest</string>
+    <string name="formats">2D.3D.4DX</string>
+    <string name="home_error">Unable to load movies</string>
+    <string name="search_failed">Could not load search results. Please try again.</string>
+    <string name="search_history">Could not load recent searches.</string>
+    <string name="search_save_failed">Could not save this search to your history.</string>
+    <string name="search_no_results">No movies found.</string>
+    <string name="movie_details_failed">Could not load movie details. Please try again.</string>
+    <string name="details_unavailable">—</string>
+    <string name="movie_duration">%1$dhr %2$dmin</string>
+    <string name="search_retry">Try again</string>
+    <string name="tv">TV</string>
+    <string name="tickets">Tickets</string>
+    <string name="more">More</string>
 
 </resources>

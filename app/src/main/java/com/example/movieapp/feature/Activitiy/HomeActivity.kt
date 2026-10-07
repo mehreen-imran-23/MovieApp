@@ -6,19 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import com.example.movieapp.R
+import com.example.movieapp.navigation.HomeNavHost
 import com.example.movieapp.ui.theme.MovieAppTheme
-import com.example.movieapp.ui.theme.MovieBg
-import com.example.movieapp.ui.theme.MovieWhite
-import com.example.movieapp.ui.theme.TextStyles
 
 class HomeActivity : ComponentActivity() {
 
@@ -32,19 +21,7 @@ class HomeActivity : ComponentActivity() {
 
         setContent {
             MovieAppTheme {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MovieBg)
-                        .safeDrawingPadding(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = stringResource(R.string.home_placeholder),
-                        style = TextStyles.AuthBody,
-                        color = MovieWhite,
-                    )
-                }
+                HomeNavHost()
             }
         }
     }

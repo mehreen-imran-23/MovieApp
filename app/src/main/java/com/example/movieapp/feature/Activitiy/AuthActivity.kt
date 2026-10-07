@@ -8,7 +8,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.movieapp.feature.Activitiy.HomeActivity
-import com.example.movieapp.feature.afterSucessProfile.ProfileActivity
+import com.example.movieapp.feature.Activitiy.ProfileActivity
 import com.example.movieapp.navigation.AuthNavHost
 import com.example.movieapp.ui.theme.MovieAppTheme
 

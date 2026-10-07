@@ -1,130 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/profileRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/movie_bg"
-    android:paddingHorizontal="26dp">
+    android:fitsSystemWindows="true">
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true"
-        android:overScrollMode="never"
-        android:scrollbars="none">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="26dp"
+        android:paddingRight="26dp">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="112dp"
+                android:paddingBottom="24dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppinsmedium"
+                    android:text="@string/signup_success"
+                    android:textColor="@color/movie_white"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/poppinsregular"
+                    android:text="@string/more_info"
+                    android:textColor="@color/text_muted"
+                    android:textSize="14sp" />
+
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/nameField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp" />
+
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/phoneField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/cityField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <TextView
+            android:id="@+id/profileError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="112dp"
-            android:paddingBottom="24dp">
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/poppinsregular"
+            android:textColor="@color/red_prime"
+            android:textSize="12sp"
+            android:visibility="gone" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppinsmedium"
-                android:text="@string/signup_success"
-                android:textColor="@color/movie_white"
-                android:textSize="22sp" />
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/continueButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/poppinsregular"
-                android:text="@string/more_info"
-                android:textColor="@color/text_muted"
-                android:textSize="14sp" />
+    </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/nameLayout"
-                style="@style/Widget.MovieApp.ProfileInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/nameInput"
-                    style="@style/Widget.MovieApp.ProfileEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/name"
-                    android:inputType="textPersonName"
-                    android:autofillHints="personName"
-                    android:imeOptions="actionNext" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/phoneLayout"
-                style="@style/Widget.MovieApp.ProfileInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/phoneInput"
-                    style="@style/Widget.MovieApp.ProfileEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/phone_number"
-                    android:inputType="phone"
-                    android:autofillHints="phone"
-                    android:imeOptions="actionNext" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cityLayout"
-                style="@style/Widget.MovieApp.ProfileInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/cityInput"
-                    style="@style/Widget.MovieApp.ProfileEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/city_pincode"
-                    android:inputType="textCapWords"
-                    android:imeOptions="actionDone" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
-    <TextView
-        android:id="@+id/profileError"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/poppinsregular"
-        android:textColor="@color/red_prime"
-        android:textSize="12sp"
-        android:accessibilityLiveRegion="polite"
-        android:visibility="gone" />
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/continueButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:minHeight="53dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:paddingTop="13dp"
-        android:paddingBottom="13dp"
-        android:fontFamily="@font/poppinssemibold"
-        android:text="@string/continue_btn"
-        android:textAllCaps="false"
-        android:textColor="@color/movie_white"
-        android:textSize="18sp"
-        app:backgroundTint="@color/red_prime"
-        app:cornerRadius="16dp"
-        app:strokeWidth="0dp" />
-</LinearLayout>
+</FrameLayout>
