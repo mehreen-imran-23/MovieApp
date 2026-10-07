@@ -180,6 +180,7 @@ class SearchViewModel(
 
         loadMoreJob = viewModelScope.launch {
             try {
+                delay(2000L)
                 val result = repository.searchMovies(
                     query = query,
                     page = nextPage,

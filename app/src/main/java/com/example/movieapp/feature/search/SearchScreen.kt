@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
@@ -38,6 +39,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,6 +62,7 @@ import com.example.movieapp.ui.theme.RedPrime
 import com.example.movieapp.ui.theme.SearchPlaceholder
 import com.example.movieapp.ui.theme.TextMuted
 import com.example.movieapp.ui.theme.TextStyles
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
 fun SearchScreen(
@@ -70,9 +73,7 @@ fun SearchScreen(
 
     SearchContent(
         state = state,
-        onIntent = { intent ->
-            viewModel.onIntent(intent)
-        },
+        onIntent = viewModel::onIntent,
         modifier = modifier,
     )
 }
@@ -87,6 +88,9 @@ fun SearchContent(
     val keyboard = LocalSoftwareKeyboardController.current
     val gridState = rememberLazyGridState()
 
+    val currentState by rememberUpdatedState(state)
+    val currentOnIntent by rememberUpdatedState(onIntent)
+
     val showRecent = state.query.isBlank()
 
     val movies = if (showRecent) {
@@ -95,29 +99,60 @@ fun SearchContent(
         state.movies
     }
 
-    LaunchedEffect(
-        gridState, state.NextPage, state.isLoadingMore,
-    ) {
+    LaunchedEffect(gridState) {
         snapshotFlow {
+            val searchState = currentState
             val layout = gridState.layoutInfo
             val lastVisible = layout.visibleItemsInfo.lastOrNull()?.index
 
-            lastVisible != null &&
+            val reachedEnd = lastVisible != null &&
                     lastVisible >= layout.totalItemsCount - 1
+
+            reachedEnd &&
+                    searchState.query.isNotBlank() &&
+                    searchState.hasSearched &&
+                    searchState.NextPage &&
+                    !searchState.isLoading &&
+                    !searchState.isLoadingMore &&
+                    searchState.loadMoreError == null
         }
+            .distinctUntilChanged()
+            .collect { shouldLoadMore ->
+                if (shouldLoadMore) {
+                    currentOnIntent(SearchIntent.LoadMore)
+                }
+            }
     }
+
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .imePadding(),
         containerColor = MovieBg,
         contentWindowInsets = WindowInsets.safeDrawing,
+        bottomBar = {
+            if (!showRecent && state.isLoadingMore) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .padding(12.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator(
+                        color = RedPrime,
+                        modifier = Modifier.size(28.dp),
+                        strokeWidth = 3.dp,
+                    )
+                }
+            }
+        },
     ) { innerPadding ->
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .consumeWindowInsets(innerPadding)
-                .imePadding(),
+                .consumeWindowInsets(innerPadding),
         ) {
             SearchHeader(
                 query = state.query,
@@ -133,7 +168,6 @@ fun SearchContent(
                     onIntent(SearchIntent.SearchClicked)
                 },
             )
-
             LazyVerticalGrid(
                 state = gridState,
                 columns = GridCells.Fixed(3),
@@ -149,7 +183,6 @@ fun SearchContent(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-
                 item(
                     key = "heading",
                     span = { GridItemSpan(maxLineSpan) },
@@ -197,7 +230,6 @@ fun SearchContent(
                         }
                     }
                 } else {
-
                     items(
                         items = movies,
                         key = { movie -> movie.id },
@@ -233,27 +265,8 @@ fun SearchContent(
                         }
                     }
 
-                    if (!showRecent && state.isLoadingMore) {
-                        item(
-                            key = "loading_more",
-                            span = { GridItemSpan(maxLineSpan) },
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                CircularProgressIndicator(
-                                    color = RedPrime,
-                                )
-                            }
-                        }
-                    }
-
                     if (!showRecent) {
                         state.loadMoreError?.let { errorId ->
-
                             item(
                                 key = "load_more_error",
                                 span = { GridItemSpan(maxLineSpan) },
@@ -328,7 +341,6 @@ private fun SearchHeader(
                 onSearch = { onSearch() },
             ),
             decorationBox = { innerTextField ->
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
