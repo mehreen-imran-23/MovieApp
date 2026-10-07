@@ -29,7 +29,9 @@ fun OnboardingNavHost(
     versionName: String,
     onOpenSignIn: (Boolean) -> Unit,
     onOpenHome: () -> Unit,
-) {
+    onOpenProfile: () -> Unit,
+
+    ) {
     val nav = rememberNavController()
     val onboardingViewModel: OnboardingViewModel = koinViewModel()
 
@@ -53,6 +55,7 @@ fun OnboardingNavHost(
                 nav,
                 onOpenSignIn,
                 onOpenHome,
+                onOpenProfile,
             ) {
                 entry.lifecycle.repeatOnLifecycle(
                     Lifecycle.State.RESUMED,
@@ -79,6 +82,10 @@ fun OnboardingNavHost(
 
                                         launchSingleTop = true
                                     }
+                                }
+
+                                SplashEvent.NavigateToProfile -> {
+                                    onOpenProfile()
                                 }
 
                                 SplashEvent.NavigateToSignIn -> {

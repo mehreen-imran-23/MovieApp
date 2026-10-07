@@ -36,6 +36,8 @@ class ProfileActivity : AppCompatActivity() {
             viewModel = viewModel,
             lifecycleOwner = this,
         )
+
+        observeEvents()
     }
 
     private fun observeEvents() {

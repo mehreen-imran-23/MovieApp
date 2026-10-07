@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.data.local.LocalPreferences
 import com.example.movieapp.data.repository.HomeRepository
+import com.example.movieapp.data.repository.ProfileRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 class SplashViewModel(
     private val preferences: LocalPreferences,
     private val homeRepository: HomeRepository,
+    private val profileRepository: ProfileRepository,
 ) : ViewModel() {
     private val _event = Channel<SplashEvent>(Channel.BUFFERED)
     val event = _event.receiveAsFlow()
@@ -31,7 +33,16 @@ class SplashViewModel(
                 val onboardingCompleted =
                     preferences.onboardingCompleted.first()
 
-                val destination = if (userId != null || isGuest) {
+                val destination = if (userId != null) {
+                    val complete = profileRepository.isProfileComplete(userId)
+                    if (complete == null) {
+                        SplashEvent.NavigateToSignIn
+                    } else if (complete) {
+                        SplashEvent.NavigateToHome
+                    } else {
+                        SplashEvent.NavigateToProfile
+                    }
+                } else if (isGuest) {
                     SplashEvent.NavigateToHome
                 } else if (onboardingCompleted) {
                     SplashEvent.NavigateToSignIn

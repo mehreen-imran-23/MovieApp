@@ -60,7 +60,6 @@ import com.example.movieapp.ui.theme.RedPrime
 import com.example.movieapp.ui.theme.SearchPlaceholder
 import com.example.movieapp.ui.theme.TextMuted
 import com.example.movieapp.ui.theme.TextStyles
-import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
 fun SearchScreen(
@@ -101,23 +100,12 @@ fun SearchContent(
     ) {
         snapshotFlow {
             val layout = gridState.layoutInfo
-            val lastVisible =
-                layout.visibleItemsInfo.lastOrNull()?.index ?: 0
+            val lastVisible = layout.visibleItemsInfo.lastOrNull()?.index
 
-            lastVisible >= layout.totalItemsCount - 4
+            lastVisible != null &&
+                    lastVisible >= layout.totalItemsCount - 1
         }
-            .distinctUntilChanged()
-            .collect { nearBottom ->
-                if (
-                    nearBottom &&
-                    state.NextPage &&
-                    !state.isLoadingMore
-                ) {
-                    onIntent(SearchIntent.LoadMore)
-                }
-            }
     }
-
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = MovieBg,

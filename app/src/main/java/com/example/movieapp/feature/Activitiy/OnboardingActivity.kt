@@ -8,6 +8,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.movieapp.feature.Activitiy.HomeActivity
+import com.example.movieapp.feature.Activitiy.ProfileActivity
 import com.example.movieapp.feature.auth.AuthActivity
 import com.example.movieapp.navigation.OnboardingNavHost
 import com.example.movieapp.ui.theme.MovieAppTheme
@@ -39,11 +40,22 @@ class OnboardingActivity : ComponentActivity() {
                             finish()
                         }
                     },
+
                     onOpenHome = {
                         startActivity(
                             Intent(
                                 this@OnboardingActivity,
                                 HomeActivity::class.java,
+                            )
+                        )
+                        finish()
+                    },
+
+                    onOpenProfile = {
+                        startActivity(
+                            Intent(
+                                this@OnboardingActivity,
+                                ProfileActivity::class.java,
                             )
                         )
                         finish()

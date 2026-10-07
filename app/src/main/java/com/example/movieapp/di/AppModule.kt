@@ -93,7 +93,7 @@ val appModule = module {
 
     viewModel {
         SplashViewModel(
-            get(), get(),
+            get(), get(), get()
         )
     }
 

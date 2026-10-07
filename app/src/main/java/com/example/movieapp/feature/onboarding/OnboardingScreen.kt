@@ -112,20 +112,21 @@ private fun OnboardingContent(
         bottomBar = {
             OnboardingBottomBar(
                 currPage = pageState.currentPage,
-                enabled = !pageState.isScrollInProgress,
                 onNext = {
-                    if (
-                        pageState.currentPage ==
-                        OnboardingStep.Poster.ordinal
-                    ) {
-                        scope.launch {
-                            pageState.animateScrollToPage(
-                                page = OnboardingStep.Genre.ordinal,
-                                animationSpec = tween(pagescroll),
-                            )
+                    if (!pageState.isScrollInProgress) {
+                        if (
+                            pageState.settledPage ==
+                            OnboardingStep.Poster.ordinal
+                        ) {
+                            scope.launch {
+                                pageState.animateScrollToPage(
+                                    page = OnboardingStep.Genre.ordinal,
+                                    animationSpec = tween(pagescroll),
+                                )
+                            }
+                        } else {
+                            onIntent(OnboardingIntent.Next)
                         }
-                    } else {
-                        onIntent(OnboardingIntent.Next)
                     }
                 },
             )
@@ -170,7 +171,6 @@ private fun OnboardingContent(
 @Composable
 private fun OnboardingBottomBar(
     currPage: Int,
-    enabled: Boolean,
     onNext: () -> Unit,
 ) {
     Column(
@@ -189,7 +189,6 @@ private fun OnboardingBottomBar(
         MovieButton(
             text = stringResource(R.string.next),
             onClick = onNext,
-            enabled = enabled,
             modifier = Modifier
                 .widthIn(max = contentWidth)
                 .fillMaxWidth()
@@ -197,7 +196,7 @@ private fun OnboardingBottomBar(
         )
 
         PageIndicator(
-            currentPage = currPage
+            currentPage = currPage,
         )
     }
 }

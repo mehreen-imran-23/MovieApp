@@ -16,4 +16,14 @@ class ProfileRepository(
             city = city.trim(),
         ) == 1
     }
+
+    suspend fun isProfileComplete(userId: Long): Boolean? {
+        val user = userDao.getUserById(userId)
+        if (user == null) {
+            return null
+        }
+
+        return user.name.isNotBlank() && user.phoneNumber.isNotBlank() &&
+                user.city.isNotBlank()
+    }
 }

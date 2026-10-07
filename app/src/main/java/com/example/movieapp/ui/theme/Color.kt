@@ -1,25 +1,40 @@
 package com.example.movieapp.ui.theme
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import com.example.movieapp.R
 
-val RedPrime = Color(0xFFEB2F3D)
-val MovieWhite = Color(0xFFFFFFFF)
+val RedPrime: Color
+    @Composable get() = colorResource(R.color.red_prime)
+val MovieWhite: Color
+    @Composable get() = colorResource(R.color.movie_white)
+val MovieBg: Color
+    @Composable get() = colorResource(R.color.movie_bg)
+val MovieSurface: Color
+    @Composable get() = colorResource(R.color.movie_surface)
+val MoviePlaceholder: Color
+    @Composable get() = colorResource(R.color.movie_placeholder)
+val Text2: Color
+    @Composable get() = colorResource(R.color.text_2)
 
-val MovieBg = Color(0xFF121011)
-val MovieSurface = Color(0xFF1E1E1E)
-val MoviePlaceholder = Color(0xFFD9D9D9)
-
-val Text2 = Color(0xFFD4D4D4)
-val TextMuted = Color(0xFF979797)
-val SearchPlaceholder = Color(0xFF939392)
-
-val Divider = Color(0xFF404040)
-val InputBorder = Color(0xFF2A2A2A)
-val PasswordToggle = Color(0xFF656565)
-
-val BookGradientS = Color(0xFF323232)
-val BookGradientM = Color(0xFF767676)
-val BookGradientE = Color(0xFF363535)
-
-val NavGradientS = Color(0xFF1F1F1F)
-val NavGradientE = Color(0xFF333333)
+val TextMuted: Color
+    @Composable get() = colorResource(R.color.text_muted)
+val SearchPlaceholder: Color
+    @Composable get() = colorResource(R.color.search_placeholder)
+val Divider: Color
+    @Composable get() = colorResource(R.color.divider)
+val InputBorder: Color
+    @Composable get() = colorResource(R.color.input_border)
+val PasswordToggle: Color
+    @Composable get() = colorResource(R.color.password_toggle)
+val BookGradientS: Color
+    @Composable get() = colorResource(R.color.book_gradient_s)
+val BookGradientM: Color
+    @Composable get() = colorResource(R.color.book_gradient_m)
+val BookGradientE: Color
+    @Composable get() = colorResource(R.color.book_gradient_e)
+val NavGradientS: Color
+    @Composable get() = colorResource(R.color.nav_gradient_s)
+val NavGradientE: Color
+    @Composable get() = colorResource(R.color.nav_gradient_e)
