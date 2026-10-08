@@ -1,11 +1,40 @@
 package com.example.movieapp.ui.theme
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import com.example.movieapp.R
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val RedPrime: Color
+    @Composable get() = colorResource(R.color.red_prime)
+val MovieWhite: Color
+    @Composable get() = colorResource(R.color.movie_white)
+val MovieBg: Color
+    @Composable get() = colorResource(R.color.movie_bg)
+val MovieSurface: Color
+    @Composable get() = colorResource(R.color.movie_surface)
+val MoviePlaceholder: Color
+    @Composable get() = colorResource(R.color.movie_placeholder)
+val Text2: Color
+    @Composable get() = colorResource(R.color.text_2)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val TextMuted: Color
+    @Composable get() = colorResource(R.color.text_muted)
+val SearchPlaceholder: Color
+    @Composable get() = colorResource(R.color.search_placeholder)
+val Divider: Color
+    @Composable get() = colorResource(R.color.divider)
+val InputBorder: Color
+    @Composable get() = colorResource(R.color.input_border)
+val PasswordToggle: Color
+    @Composable get() = colorResource(R.color.password_toggle)
+val BookGradientS: Color
+    @Composable get() = colorResource(R.color.book_gradient_s)
+val BookGradientM: Color
+    @Composable get() = colorResource(R.color.book_gradient_m)
+val BookGradientE: Color
+    @Composable get() = colorResource(R.color.book_gradient_e)
+val NavGradientS: Color
+    @Composable get() = colorResource(R.color.nav_gradient_s)
+val NavGradientE: Color
+    @Composable get() = colorResource(R.color.nav_gradient_e)
