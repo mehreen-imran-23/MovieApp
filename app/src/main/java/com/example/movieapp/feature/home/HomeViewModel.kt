@@ -68,7 +68,6 @@ class HomeViewModel(
     }
 
     private fun loadHomeData() {
-
         loadHomeJob = viewModelScope.launch {
             try {
                 val homeData = repository.getHomeData()

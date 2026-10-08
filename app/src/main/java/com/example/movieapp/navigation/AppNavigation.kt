@@ -3,8 +3,11 @@ package com.example.movieapp.navigation
 import Onboarding1Event
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.NavHost
@@ -20,6 +23,7 @@ import com.example.movieapp.feature.onboarding.OnboardingViewModel
 import com.example.movieapp.feature.splash.SplashEvent
 import com.example.movieapp.feature.splash.SplashScreen
 import com.example.movieapp.feature.splash.SplashViewModel
+import com.example.movieapp.ui.theme.MovieBg
 import kotlinx.coroutines.flow.first
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -39,6 +43,9 @@ fun OnboardingNavHost(
     NavHost(
         navController = nav,
         startDestination = Destinations.Splash.route,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MovieBg),
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
         popEnterTransition = { EnterTransition.None },

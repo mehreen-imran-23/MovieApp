@@ -14,7 +14,6 @@ class GenreIdsConverter {
         if (value.isBlank()) {
             return emptyList()
         }
-
         return value.split(",").map { it.toInt() }
     }
 }

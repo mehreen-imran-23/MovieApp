@@ -17,7 +17,6 @@ import com.example.movieapp.data.local.model.UserDao
 )
 @ColumnTypeConverters(GenreIdsConverter::class)
 abstract class AppDatabase : RoomDatabase() {
-
     abstract fun userDao(): UserDao
     abstract fun SearchDao(): SearchDao
 }

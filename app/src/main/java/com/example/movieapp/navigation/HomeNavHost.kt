@@ -1,8 +1,14 @@
 package com.example.movieapp.navigation
 
 import android.widget.Toast
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
@@ -21,6 +27,7 @@ import com.example.movieapp.feature.moviedetails.MovieDetailsViewModel
 import com.example.movieapp.feature.search.SearchEvent
 import com.example.movieapp.feature.search.SearchScreen
 import com.example.movieapp.feature.search.SearchViewModel
+import com.example.movieapp.ui.theme.MovieBg
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -31,12 +38,43 @@ fun HomeNavHost(
     val nav = rememberNavController()
     val context = LocalContext.current
 
-
     NavHost(
         navController = nav,
         startDestination = "home",
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MovieBg),
+
+        enterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { width -> width },
+                animationSpec = tween(300)
+            )
+        },
+
+        exitTransition = {
+            slideOutHorizontally(
+                targetOffsetX = { width -> -width },
+                animationSpec = tween(300)
+            )
+        },
+
+        popEnterTransition = {
+            slideInHorizontally(
+                initialOffsetX = { width -> -width },
+                animationSpec = tween(300)
+            )
+        },
+
+        popExitTransition = {
+            slideOutHorizontally(
+                targetOffsetX = { width -> width },
+                animationSpec = tween(300)
+            )
+        }
     ) {
         composable("home") { entry ->
+
             val viewModel: HomeViewModel = koinViewModel()
 
             LaunchedEffect(viewModel, entry, onOpenSignIn, context) {
@@ -45,6 +83,7 @@ fun HomeNavHost(
                 ) {
                     viewModel.events.collect { event ->
                         when (event) {
+
                             HomeEvent.NavigateToSearch -> {
                                 nav.navigate("search") {
                                     launchSingleTop = true
@@ -59,7 +98,7 @@ fun HomeNavHost(
                                 Toast.makeText(
                                     context,
                                     R.string.logout_failed,
-                                    Toast.LENGTH_SHORT,
+                                    Toast.LENGTH_SHORT
                                 ).show()
                             }
 
@@ -74,11 +113,12 @@ fun HomeNavHost(
             }
 
             HomeScreen(
-                viewModel = viewModel,
+                viewModel = viewModel
             )
         }
 
         composable("search") { entry ->
+
             val viewModel: SearchViewModel = koinViewModel()
 
             LaunchedEffect(viewModel, entry) {
@@ -87,6 +127,7 @@ fun HomeNavHost(
                 ) {
                     viewModel.events.collect { event ->
                         when (event) {
+
                             SearchEvent.NavigateBack -> {
                                 nav.popBackStack()
                             }
@@ -102,25 +143,26 @@ fun HomeNavHost(
             }
 
             SearchScreen(
-                viewModel = viewModel,
+                viewModel = viewModel
             )
         }
-
         composable(
             route = "movie_details/{movieId}",
             arguments = listOf(
                 navArgument("movieId") {
                     type = NavType.IntType
                 }
-            ),
+            )
         ) { entry ->
-            val movieId = requireNotNull(entry.arguments).getInt("movieId")
+
+            val movieId = requireNotNull(entry.arguments)
+                .getInt("movieId")
 
             val viewModel: MovieDetailsViewModel = koinViewModel(
                 viewModelStoreOwner = entry,
                 parameters = {
                     parametersOf(movieId, "IN")
-                },
+                }
             )
 
             LaunchedEffect(viewModel, entry) {
@@ -129,6 +171,7 @@ fun HomeNavHost(
                 ) {
                     viewModel.events.collect { event ->
                         when (event) {
+
                             MovieDetailsEvent.NavigateBack -> {
                                 nav.popBackStack()
                             }
@@ -138,7 +181,7 @@ fun HomeNavHost(
             }
 
             MovieDetailsScreen(
-                viewModel = viewModel,
+                viewModel = viewModel
             )
         }
     }

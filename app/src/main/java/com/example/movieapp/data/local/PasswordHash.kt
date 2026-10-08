@@ -10,7 +10,6 @@ import java.security.SecureRandom
 
 
 class PassHash {
-
     suspend fun hash(password: String): HashedPass =
         withContext(Dispatchers.Default) {
             val salt = ByteArray(16)

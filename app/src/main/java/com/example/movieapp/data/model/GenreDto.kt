@@ -1,4 +1,11 @@
 package com.example.movieapp.data.model
 
+import com.google.gson.annotations.SerializedName
 
-data class GenreDto(val id: Int, val name: String)
+
+data class GenreDto(
+    @SerializedName("id")
+    val id: Int,
+    @SerializedName("name")
+    val name: String
+)
