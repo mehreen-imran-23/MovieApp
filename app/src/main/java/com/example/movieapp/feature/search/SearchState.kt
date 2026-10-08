@@ -1,7 +1,7 @@
 package com.example.movieapp.feature.search
 
 import androidx.annotation.StringRes
-import com.example.movieapp.data.cleanData.HomeMovie
+import com.example.movieapp.data.model.HomeMovie
 
 data class SearchUiState(
     val query: String = "",

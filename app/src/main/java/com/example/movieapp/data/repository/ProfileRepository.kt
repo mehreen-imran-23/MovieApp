@@ -1,6 +1,6 @@
 package com.example.movieapp.data.repository
 
-import com.example.movieapp.data.local.model.UserDao
+import com.example.movieapp.data.model.UserDao
 
 class ProfileRepository(
     private val userDao: UserDao,

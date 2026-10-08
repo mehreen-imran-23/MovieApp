@@ -1,7 +1,7 @@
 package com.example.movieapp.feature.moviedetails
 
 import androidx.annotation.StringRes
-import com.example.movieapp.data.cleanData.MovieDetailsData
+import com.example.movieapp.data.model.MovieDetailsData
 
 data class MovieDetailsState(
     val movie: MovieDetailsData? = null,

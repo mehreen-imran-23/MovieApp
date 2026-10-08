@@ -15,6 +15,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -33,150 +34,135 @@ fun profileBind(
     viewModel: ProfileViewModel,
     lifecycleOwner: LifecycleOwner,
 ) {
-    val strategy =
-        ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+    with(binding)
+    {
+        val strategy = ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
 
-    binding.nameField.setViewCompositionStrategy(strategy)
-    binding.phoneField.setViewCompositionStrategy(strategy)
-    binding.cityField.setViewCompositionStrategy(strategy)
-    binding.continueButton.setViewCompositionStrategy(strategy)
+        nameField.setViewCompositionStrategy(strategy)
+        phoneField.setViewCompositionStrategy(strategy)
+        cityField.setViewCompositionStrategy(strategy)
+        continueButton.setViewCompositionStrategy(strategy)
 
-    binding.nameField.setContent {
-        MovieAppTheme {
-            val state by viewModel.uiState.collectAsStateWithLifecycle()
-            val focusManager = LocalFocusManager.current
+        nameField.setContent {
+            MovieAppTheme {
+                val state by viewModel.uiState.collectAsStateWithLifecycle()
+                val focusManager = LocalFocusManager.current
 
-            AuthTextField(
-                value = state.name.input,
-                onValueChange = {
-                    viewModel.onIntent(
-                        ProfileIntent.NameChanged(it)
-                    )
-                },
-                placeholder = stringResource(R.string.name),
-                enabled = !state.isLoading,
-                errorMsg = state.name.errorMsg?.let {
-                    stringResource(it)
-                },
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Words,
-                    imeAction = ImeAction.Next,
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        focusManager.moveFocus(FocusDirection.Down)
+                AuthTextField(
+                    value = state.name.input,
+                    onValueChange = {
+                        viewModel.onIntent(
+                            ProfileIntent.NameChanged(it)
+                        )
                     },
-                ),
-            )
+                    placeholder = stringResource(R.string.name),
+                    enabled = !state.isLoading,
+                    errorMsg = state.name.errorMsg?.let { stringResource(it) },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Words,
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Down) },
+                    ),
+                )
+            }
         }
-    }
 
-    binding.phoneField.setContent {
-        MovieAppTheme {
-            val state by viewModel.uiState.collectAsStateWithLifecycle()
-            val focusManager = LocalFocusManager.current
+        phoneField.setContent {
+            MovieAppTheme {
+                val state by viewModel.uiState.collectAsStateWithLifecycle()
+                val focusManager = LocalFocusManager.current
 
-            AuthTextField(
-                value = state.phoneNumber.input,
-                onValueChange = {
-                    viewModel.onIntent(
-                        ProfileIntent.PhoneNumber(it)
-                    )
-                },
-                placeholder = stringResource(R.string.phone_number),
-                enabled = !state.isLoading,
-                errorMsg = state.phoneNumber.errorMsg?.let {
-                    stringResource(it)
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Phone,
-                    imeAction = ImeAction.Next,
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        focusManager.moveFocus(FocusDirection.Down)
+                AuthTextField(
+                    value = state.phoneNumber.input,
+                    onValueChange = {
+                        viewModel.onIntent(
+                            ProfileIntent.PhoneNumber(it)
+                        )
                     },
-                ),
-            )
-        }
-    }
-
-    binding.cityField.setContent {
-        MovieAppTheme {
-            val state by viewModel.uiState.collectAsStateWithLifecycle()
-            val focusManager = LocalFocusManager.current
-
-            AuthTextField(
-                value = state.city.input,
-                onValueChange = {
-                    viewModel.onIntent(
-                        ProfileIntent.City(it)
-                    )
-                },
-                placeholder = stringResource(R.string.city_pincode),
-                enabled = !state.isLoading,
-                errorMsg = state.city.errorMsg?.let {
-                    stringResource(it)
-                },
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Words,
-                    imeAction = ImeAction.Done,
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
+                    placeholder = stringResource(R.string.phone_number),
+                    enabled = !state.isLoading,
+                    errorMsg = state.phoneNumber.errorMsg?.let {
+                        stringResource(it)
                     },
-                ),
-            )
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Phone,
+                        imeAction = ImeAction.Next,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            focusManager.moveFocus(FocusDirection.Down)
+                        },
+                    ),
+                )
+            }
         }
-    }
 
-    binding.continueButton.setContent {
-        MovieAppTheme {
-            val state by viewModel.uiState.collectAsStateWithLifecycle()
+        cityField.setContent {
+            MovieAppTheme {
+                val state by viewModel.uiState.collectAsStateWithLifecycle()
+                val focusManager = LocalFocusManager.current
 
-            MovieButton(
-                text = stringResource(
-                    if (state.isLoading) {
-                        R.string.profile_saving
+                AuthTextField(
+                    value = state.city.input,
+                    onValueChange = {
+                        viewModel.onIntent(
+                            ProfileIntent.City(it)
+                        )
+                    },
+                    placeholder = stringResource(R.string.city_pincode),
+                    enabled = !state.isLoading,
+                    errorMsg = state.city.errorMsg?.let { stringResource(it) },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Words,
+                        imeAction = ImeAction.Done,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
+                        },
+                    ),
+                )
+            }
+        }
+
+        continueButton.setContent {
+            MovieAppTheme {
+                val state by viewModel.uiState.collectAsStateWithLifecycle()
+                MovieButton(
+                    text = stringResource(
+                        if (state.isLoading) {
+                            R.string.profile_saving
+                        } else {
+                            R.string.continue_btn
+                        }
+                    ),
+                    onClick = {
+                        root.clearFocus()
+                        ViewCompat.getWindowInsetsController(root)
+                            ?.hide(WindowInsetsCompat.Type.ime())
+
+                        viewModel.onIntent(ProfileIntent.ContinueClicked)
+                    },
+                    enabled = !state.isLoading,
+                    modifier = Modifier.fillMaxWidth(),
+                    bg = RedPrime,
+                    content = MovieWhite,
+                )
+            }
+        }
+
+        lifecycleOwner.lifecycleScope.launch {
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    val error = state.errorMsg
+                    if (error != null) {
+                        profileError.text = root.context.getString(error)
+                        profileError.visibility = View.VISIBLE
                     } else {
-                        R.string.continue_btn
+                        profileError.visibility = View.GONE
                     }
-                ),
-                onClick = {
-                    binding.root.clearFocus()
-
-                    ViewCompat
-                        .getWindowInsetsController(binding.root)
-                        ?.hide(WindowInsetsCompat.Type.ime())
-
-                    viewModel.onIntent(
-                        ProfileIntent.ContinueClicked
-                    )
-                },
-                enabled = !state.isLoading,
-                modifier = Modifier.fillMaxWidth(),
-                bg = RedPrime,
-                content = MovieWhite,
-            )
-        }
-    }
-
-    lifecycleOwner.lifecycleScope.launch {
-        lifecycleOwner.repeatOnLifecycle(
-            androidx.lifecycle.Lifecycle.State.STARTED
-        ) {
-            viewModel.uiState.collect { state ->
-
-                val error = state.errorMsg
-
-                if (error != null) {
-                    binding.profileError.text =
-                        binding.root.context.getString(error)
-
-                    binding.profileError.visibility = View.VISIBLE
-                } else {
-                    binding.profileError.visibility = View.GONE
                 }
             }
         }

@@ -1,6 +1,6 @@
 package com.example.movieapp.data.mapper
 
-import com.example.movieapp.data.cleanData.HomeMovie
+import com.example.movieapp.data.model.HomeMovie
 import com.example.movieapp.data.remote.GenreDto
 import com.example.movieapp.data.remote.MovieDto
 import java.util.Locale

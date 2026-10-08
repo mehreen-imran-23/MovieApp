@@ -1,10 +1,10 @@
 package com.example.movieapp.data.repository
 
-import com.example.movieapp.data.cleanData.HomeMovie
-import com.example.movieapp.data.cleanData.SearchPage
 import com.example.movieapp.data.local.RecentSearchEntity
-import com.example.movieapp.data.local.model.SearchDao
 import com.example.movieapp.data.mapper.HomeMapper
+import com.example.movieapp.data.model.HomeMovie
+import com.example.movieapp.data.model.SearchDao
+import com.example.movieapp.data.model.SearchPage
 import com.example.movieapp.data.remote.Api
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

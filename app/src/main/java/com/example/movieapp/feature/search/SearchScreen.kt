@@ -52,7 +52,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movieapp.R
-import com.example.movieapp.data.cleanData.HomeMovie
+import com.example.movieapp.data.model.HomeMovie
 import com.example.movieapp.ui.common_components.MovieBackButton
 import com.example.movieapp.ui.components.MoviePoster
 import com.example.movieapp.ui.theme.MovieBg

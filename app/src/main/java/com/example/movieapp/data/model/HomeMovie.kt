@@ -1,4 +1,4 @@
-package com.example.movieapp.data.cleanData
+package com.example.movieapp.data.model
 
 data class HomeMovie(
     val id: Int,

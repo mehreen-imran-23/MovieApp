@@ -2,7 +2,7 @@ package com.example.movieapp.data.repository
 
 import com.example.movieapp.data.local.PassHash
 import com.example.movieapp.data.local.UserEntity
-import com.example.movieapp.data.local.model.UserDao
+import com.example.movieapp.data.model.UserDao
 
 class AuthRepository(
     private val userDao: UserDao,

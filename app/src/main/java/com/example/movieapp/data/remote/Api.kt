@@ -1,6 +1,6 @@
 package com.example.movieapp.data.remote
 
-import com.example.movieapp.data.model.MovieDetailsDto
+import com.example.movieapp.data.remote.model.MovieDetailsDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

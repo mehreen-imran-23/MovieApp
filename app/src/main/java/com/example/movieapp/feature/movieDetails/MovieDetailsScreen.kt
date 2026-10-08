@@ -40,7 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movieapp.R
-import com.example.movieapp.data.cleanData.MovieDetailsData
+import com.example.movieapp.data.model.MovieDetailsData
 import com.example.movieapp.feature.movieDetails.MovieDetailsIntent
 import com.example.movieapp.ui.common_components.MovieBackButton
 import com.example.movieapp.ui.components.MovieButton

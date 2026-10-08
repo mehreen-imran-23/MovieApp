@@ -1,9 +1,9 @@
 package com.example.movieapp.data.repository
 
-import com.example.movieapp.data.cleanData.HomeData
 import com.example.movieapp.data.local.LocalPreferences
-import com.example.movieapp.data.local.model.UserDao
 import com.example.movieapp.data.mapper.HomeMapper
+import com.example.movieapp.data.model.HomeData
+import com.example.movieapp.data.model.UserDao
 import com.example.movieapp.data.remote.Api
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

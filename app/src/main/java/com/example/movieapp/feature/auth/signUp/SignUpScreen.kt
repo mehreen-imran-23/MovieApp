@@ -82,16 +82,13 @@ private fun SignUpContent(
     var passVisible by rememberSaveable {
         mutableStateOf(false)
     }
-
     val focusManager = LocalFocusManager.current
-
     val signup: () -> Unit = {
         if (!state.button.isLoading) {
             focusManager.clearFocus()
             onIntent(AuthIntent.AuthClicked)
         }
     }
-
     AuthLayout(
         title = stringResource(R.string.signup_title),
         onSkipClick = {

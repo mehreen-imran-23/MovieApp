@@ -1,4 +1,4 @@
-package com.example.movieapp.data.local.model
+package com.example.movieapp.data.model
 
 import androidx.room3.Dao
 import androidx.room3.Query

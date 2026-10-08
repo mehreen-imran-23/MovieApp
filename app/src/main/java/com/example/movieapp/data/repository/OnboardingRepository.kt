@@ -1,7 +1,7 @@
 package com.example.movieapp.data.repository
 
-import com.example.movieapp.data.model.GenreDto
 import com.example.movieapp.data.remote.Api
+import com.example.movieapp.data.remote.model.GenreDto
 import java.io.IOException
 
 class OnboardingRepository(
