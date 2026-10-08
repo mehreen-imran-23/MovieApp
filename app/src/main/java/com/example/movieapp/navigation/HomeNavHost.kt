@@ -1,7 +1,9 @@
 package com.example.movieapp.navigation
 
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavType
@@ -9,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.movieapp.R
 import com.example.movieapp.feature.home.HomeEvent
 import com.example.movieapp.feature.home.HomeScreen
 import com.example.movieapp.feature.home.HomeViewModel
@@ -22,8 +25,12 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun HomeNavHost() {
+fun HomeNavHost(
+    onOpenSignIn: () -> Unit,
+) {
     val nav = rememberNavController()
+    val context = LocalContext.current
+
 
     NavHost(
         navController = nav,
@@ -32,7 +39,7 @@ fun HomeNavHost() {
         composable("home") { entry ->
             val viewModel: HomeViewModel = koinViewModel()
 
-            LaunchedEffect(viewModel, entry) {
+            LaunchedEffect(viewModel, entry, onOpenSignIn, context) {
                 entry.lifecycle.repeatOnLifecycle(
                     Lifecycle.State.STARTED
                 ) {
@@ -42,6 +49,18 @@ fun HomeNavHost() {
                                 nav.navigate("search") {
                                     launchSingleTop = true
                                 }
+                            }
+
+                            HomeEvent.NavigateToSignIn -> {
+                                onOpenSignIn()
+                            }
+
+                            HomeEvent.LogoutFailed -> {
+                                Toast.makeText(
+                                    context,
+                                    R.string.logout_failed,
+                                    Toast.LENGTH_SHORT,
+                                ).show()
                             }
 
                             is HomeEvent.NavigateToMovieDetails -> {

@@ -27,6 +27,8 @@ import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -97,7 +99,11 @@ fun HomeContent(
         modifier = modifier.fillMaxSize(),
         containerColor = MovieBg,
         bottomBar = {
-            HomeBottomBar()
+            HomeBottomBar(
+                onLogout = {
+                    onIntent(HomeIntent.LogoutClicked)
+                },
+            )
         },
     ) { innerPadding ->
         Box(
@@ -591,9 +597,15 @@ private fun RecommendedCard(
 }
 
 @Composable
-private fun HomeBottomBar() {
+private fun HomeBottomBar(
+    onLogout: () -> Unit,
+) {
     var selectedTab by rememberSaveable {
         mutableStateOf(BottomTab.Movies)
+    }
+
+    var showMenu by rememberSaveable {
+        mutableStateOf(false)
     }
 
     Box(
@@ -640,21 +652,49 @@ private fun HomeBottomBar() {
                     }
                 )
 
-                BottomButton(
-                    icon = icon,
-                    label = label,
-                    selected = selected,
-                    onClick = {
-                        selectedTab = tab
-                    },
-                    modifier = if (selected) {
-                        Modifier
-                            .width(112.dp)
-                            .height(58.dp)
-                    } else {
-                        Modifier.size(58.dp)
-                    },
-                )
+                Box {
+                    BottomButton(
+                        icon = icon,
+                        label = label,
+                        selected = selected,
+                        onClick = {
+                            if (tab == BottomTab.More) {
+                                showMenu = true
+                            } else {
+                                selectedTab = tab
+                            }
+                        },
+                        modifier = if (selected) {
+                            Modifier
+                                .width(112.dp)
+                                .height(58.dp)
+                        } else {
+                            Modifier.size(58.dp)
+                        },
+                    )
+
+                    if (tab == BottomTab.More) {
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = {
+                                showMenu = false
+                            },
+                        ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = stringResource(R.string.logout),
+                                        color = MovieWhite,
+                                    )
+                                },
+                                onClick = {
+                                    showMenu = false
+                                    onLogout()
+                                },
+                            )
+                        }
+                    }
+                }
             }
         }
     }

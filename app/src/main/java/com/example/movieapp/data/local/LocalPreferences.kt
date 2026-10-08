@@ -70,4 +70,11 @@ class LocalPreferences(
             preferences[onboardingKey] = true
         }
     }
+
+    suspend fun logout() {
+        dataStore.edit { preferences ->
+            preferences.remove(userIdKey)
+            preferences.remove(guestKey)
+        }
+    }
 }
