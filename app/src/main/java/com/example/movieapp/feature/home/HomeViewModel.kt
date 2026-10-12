@@ -74,8 +74,8 @@ class HomeViewModel(
             val guest = preferences.isGuest.first()
 
             _uiState.update {
-                it.copy(isGuest = when
-                    {
+                it.copy(
+                    isGuest = when {
                         userId != null -> false
                         guest -> true
                         else -> null

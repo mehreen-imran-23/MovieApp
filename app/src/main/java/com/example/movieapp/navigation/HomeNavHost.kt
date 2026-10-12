@@ -41,7 +41,9 @@ fun HomeNavHost(
     NavHost(
         navController = nav,
         startDestination = "home",
-        modifier = Modifier.fillMaxSize().background(MovieBg),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MovieBg),
 
         enterTransition = {
             slideInHorizontally(
