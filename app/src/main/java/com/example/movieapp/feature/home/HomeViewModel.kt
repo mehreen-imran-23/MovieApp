@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -69,6 +70,18 @@ class HomeViewModel(
 
     private fun loadHomeData() {
         loadHomeJob = viewModelScope.launch {
+            val userId = preferences.activeUserId.first()
+            val guest = preferences.isGuest.first()
+
+            _uiState.update {
+                it.copy(isGuest = when
+                    {
+                        userId != null -> false
+                        guest -> true
+                        else -> null
+                    },
+                )
+            }
             try {
                 val homeData = repository.getHomeData()
                 _uiState.update {

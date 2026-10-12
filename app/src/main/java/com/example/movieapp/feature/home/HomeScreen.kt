@@ -1,11 +1,11 @@
 package com.example.movieapp.feature.home
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,14 +21,20 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.FilterAlt
 import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -48,6 +54,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -62,7 +69,10 @@ import com.example.movieapp.ui.theme.MovieSurface
 import com.example.movieapp.ui.theme.MovieWhite
 import com.example.movieapp.ui.theme.NavGradientE
 import com.example.movieapp.ui.theme.NavGradientS
+import com.example.movieapp.ui.theme.ProfileAvatarBg
+import com.example.movieapp.ui.theme.ProfileDivider
 import com.example.movieapp.ui.theme.RedPrime
+import com.example.movieapp.ui.theme.Text2
 import com.example.movieapp.ui.theme.TextStyles
 
 
@@ -99,11 +109,7 @@ fun HomeContent(
         modifier = modifier.fillMaxSize(),
         containerColor = MovieBg,
         bottomBar = {
-            HomeBottomBar(
-                onLogout = {
-                    onIntent(HomeIntent.LogoutClicked)
-                },
-            )
+            HomeBottomBar()
         },
     ) { innerPadding ->
         Box(
@@ -125,11 +131,13 @@ fun HomeContent(
                     HomeHeader(
                         userName = state.userName,
                         city = state.city,
+                        isGuest = state.isGuest,
+                        profileReady = !state.isLoading && state.isGuest != null,
                         onSearchClick = {
                             onIntent(HomeIntent.SearchClicked)
                         },
-                        onProfileClick = {
-                            //only clickable
+                        onLogout = {
+                            onIntent(HomeIntent.LogoutClicked)
                         },
                     )
                 }
@@ -193,13 +201,20 @@ fun HomeContent(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeHeader(
     userName: String,
     city: String,
+    isGuest: Boolean?,
+    profileReady: Boolean,
     onSearchClick: () -> Unit,
-    onProfileClick: () -> Unit,
+    onLogout: () -> Unit,
 ) {
+    var showProfile by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -207,20 +222,19 @@ private fun HomeHeader(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-
             Text(
-                text = if (userName.isBlank()) {
-                    stringResource(R.string.guest_greeting)
-                } else {
-                    stringResource(
-                        R.string.home_greeting,
-                        userName,
-                    )
+                text = when {
+                    isGuest == true ->
+                        stringResource(R.string.guest_greeting)
+
+                    isGuest == false && userName.isNotBlank() ->
+                        stringResource(R.string.home_greeting, userName)
+
+                    else -> ""
                 },
                 style = TextStyles.Home,
                 color = MovieWhite,
@@ -230,7 +244,6 @@ private fun HomeHeader(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-
                     Text(
                         text = city,
                         style = TextStyles.Metadata,
@@ -264,35 +277,134 @@ private fun HomeHeader(
         ) {
             Icon(
                 imageVector = Icons.Outlined.Search,
-                contentDescription = stringResource(
-                    R.string.search
-                ),
+                contentDescription = stringResource(R.string.search),
                 tint = MovieWhite,
                 modifier = Modifier.size(28.dp),
             )
         }
 
-        IconButton(
-            onClick = onProfileClick,
-            modifier = Modifier
-                .size(50.dp)
-                .background(
-                    MovieSurface,
-                    CircleShape,
-                ),
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.PersonOutline,
-                contentDescription = stringResource(
-                    R.string.open_profile
-                ),
-                tint = MovieWhite,
-                modifier = Modifier.size(28.dp),
-            )
+        Box {
+            IconButton(
+                onClick = {
+                    showProfile = !showProfile
+                },
+                enabled = profileReady,
+                modifier = Modifier
+                    .size(50.dp)
+                    .background(
+                        MovieSurface,
+                        CircleShape,
+                    ),
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.PersonOutline,
+                    contentDescription = stringResource(R.string.open_profile),
+                    tint = MovieWhite,
+                    modifier = Modifier.size(28.dp),
+                )
+            }
+
+            DropdownMenu(
+                expanded = showProfile && profileReady,
+                onDismissRequest = {
+                    showProfile = false
+                },
+                modifier = Modifier.width(230.dp),
+                containerColor = MovieSurface,
+                shape = RoundedCornerShape(16.dp),
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(42.dp)
+                                .background(
+                                    color = ProfileAvatarBg,
+                                    shape = CircleShape,
+                                ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.PersonOutline,
+                                contentDescription = null,
+                                tint = MovieWhite,
+                                modifier = Modifier.size(24.dp),
+                            )
+                        }
+
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(3.dp),
+                        ) {
+                            Text(
+                                text = when (isGuest) {
+                                    true -> stringResource(R.string.profile_guest)
+                                    false -> userName
+                                    null -> ""
+                                },
+                                style = TextStyles.Metadata,
+                                color = MovieWhite,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+
+                            Text(
+                                text = stringResource(R.string.active),
+                                style = TextStyles.SmallLabel,
+                                color = Text2,
+                            )
+                        }
+                    }
+
+                    HorizontalDivider(color = ProfileDivider)
+
+                    Button(
+                        onClick = {
+                            showProfile = false
+                            onLogout()
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 48.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = RedPrime,
+                            contentColor = MovieWhite,
+                        ),
+                        contentPadding = PaddingValues(
+                            horizontal = 18.dp,
+                            vertical = 10.dp,
+                        ),
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Logout,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+
+                        Spacer(
+                            modifier = Modifier.width(8.dp)
+                        )
+
+                        Text(
+                            text = stringResource(R.string.logout),
+                            style = TextStyles.Metadata,
+                        )
+                    }
+                }
+            }
         }
     }
 }
-
 
 @Composable
 private fun TrendingCard(
@@ -597,15 +709,9 @@ private fun RecommendedCard(
 }
 
 @Composable
-private fun HomeBottomBar(
-    onLogout: () -> Unit,
-) {
+private fun HomeBottomBar() {
     var selectedTab by rememberSaveable {
         mutableStateOf(BottomTab.Movies)
-    }
-
-    var showMenu by rememberSaveable {
-        mutableStateOf(false)
     }
 
     Box(
@@ -658,9 +764,7 @@ private fun HomeBottomBar(
                         label = label,
                         selected = selected,
                         onClick = {
-                            if (tab == BottomTab.More) {
-                                showMenu = true
-                            } else {
+                            if (tab != BottomTab.More) {
                                 selectedTab = tab
                             }
                         },
@@ -673,27 +777,7 @@ private fun HomeBottomBar(
                         },
                     )
 
-                    if (tab == BottomTab.More) {
-                        DropdownMenu(
-                            expanded = showMenu,
-                            onDismissRequest = {
-                                showMenu = false
-                            },
-                        ) {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = stringResource(R.string.logout),
-                                        color = MovieWhite,
-                                    )
-                                },
-                                onClick = {
-                                    showMenu = false
-                                    onLogout()
-                                },
-                            )
-                        }
-                    }
+
                 }
             }
         }

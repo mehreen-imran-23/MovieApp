@@ -17,4 +17,6 @@
     <color name="book_gradient_e">#363535</color>
     <color name="nav_gradient_s">#1F1F1F</color>
     <color name="nav_gradient_e">#333333</color>
+    <color name="profile_avatar_bg">#484853</color>
+    <color name="profile_divider">#555560</color>
 </resources>

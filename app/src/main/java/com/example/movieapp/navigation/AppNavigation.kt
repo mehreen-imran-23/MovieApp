@@ -154,6 +154,7 @@ fun AuthNavHost(
     NavHost(
         navController = nav,
         startDestination = AuthEnum.SignIn.name,
+        modifier = Modifier.fillMaxSize().background(MovieBg),
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
         popEnterTransition = { EnterTransition.None },

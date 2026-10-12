@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.R
 import com.example.movieapp.data.repository.MovieDetailsRepository
-import com.example.movieapp.feature.movieDetails.MovieDetailsIntent
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

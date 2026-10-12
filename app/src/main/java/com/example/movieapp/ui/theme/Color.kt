@@ -38,3 +38,9 @@ val NavGradientS: Color
     @Composable get() = colorResource(R.color.nav_gradient_s)
 val NavGradientE: Color
     @Composable get() = colorResource(R.color.nav_gradient_e)
+
+val ProfileAvatarBg: Color
+    @Composable get() = colorResource(R.color.profile_avatar_bg)
+
+val ProfileDivider: Color
+    @Composable get() = colorResource(R.color.profile_divider)

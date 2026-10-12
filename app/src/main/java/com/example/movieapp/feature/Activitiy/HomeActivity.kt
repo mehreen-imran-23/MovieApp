@@ -35,6 +35,7 @@ class HomeActivity : ComponentActivity() {
                         }
 
                         startActivity(intent)
+                        overridePendingTransition(0, 0)
                     },
                 )
             }

@@ -10,4 +10,5 @@ data class HomeState(
     val recommendedMovies: List<HomeMovie> = emptyList(),
     val isLoading: Boolean = false,
     @param:StringRes val errorMsg: Int? = null,
+    val isGuest: Boolean? = null,
 )
