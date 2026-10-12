@@ -198,7 +198,6 @@ fun HomeContent(
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeHeader(
@@ -762,9 +761,7 @@ private fun HomeBottomBar() {
                         label = label,
                         selected = selected,
                         onClick = {
-                            if (tab != BottomTab.More) {
-                                selectedTab = tab
-                            }
+                            selectedTab = tab
                         },
                         modifier = if (selected) {
                             Modifier
