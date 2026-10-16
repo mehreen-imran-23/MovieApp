@@ -1,5 +1,4 @@
 package com.example.movieapp.feature.afterSucessProfile
-
 import android.view.View
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions

@@ -26,7 +26,7 @@ class ProfileViewModel(
     private val _events = MutableSharedFlow<ProfileEvent>(
         replay = 0,
     )
-    val events = _events.asSharedFlow()
+    val events = _events.asSharedFlow() //
 
     fun onIntent(intent: ProfileIntent) {
         if (_uiState.value.isLoading) {
@@ -78,7 +78,6 @@ class ProfileViewModel(
 
     private fun saveProfile() {
         val state = _uiState.value
-
         val name = state.name.input.trim()
         val phoneNumber = state.phoneNumber.input.trim()
         val city = state.city.input.trim()

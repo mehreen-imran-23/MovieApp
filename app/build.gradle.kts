@@ -80,6 +80,8 @@ dependencies {
     implementation(libs.androidx.room3.common)
     implementation(libs.androidx.room3.runtime)
     testImplementation(libs.junit)
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+    testImplementation("io.mockk:mockk:1.14.6")
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -99,6 +101,7 @@ dependencies {
     implementation("org.bouncycastle:bcprov-jdk15to18:1.86")
     ksp("androidx.room3:room3-compiler:3.0.3")
     implementation(libs.material.views)
+    testImplementation("io.mockk:mockk:1.13.17")
 
 }
 ksp {
